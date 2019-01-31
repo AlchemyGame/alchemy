@@ -1,0 +1,16 @@
+{
+  "name": "alchemy",
+  "version": "0.0.0",
+  "scripts": {
+    "database": "mongod --bind_ip 127.0.0.1 --port 27017",
+    "server": "nodemon server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "connect-mongo": "^2.0.3",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "moment": "^2.22.2",
+    "mongoose": "^5.3.15"
+  }
+}
