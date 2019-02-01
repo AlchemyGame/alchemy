@@ -7,16 +7,11 @@ const schema = new Schema({
     ref: "Element",
     required: true
   },
-  firstElement: {
+  recipe: [{
     type: Schema.Types.ObjectId,
     ref: "Element",
     required: true
-  },
-  secondElement: {
-    type: Schema.Types.ObjectId,
-    ref: "Element",
-    required: true
-  }
+  }]
 });
 
 exports.Recipe = mongoose.model("Recipe", schema);
