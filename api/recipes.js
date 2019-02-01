@@ -43,6 +43,14 @@ function getRecipes(req, res) {
 
 async function addRecipe(req, res) {
     const { result, recipe } = req.body;
+    if (!result || ! recipe) {
+        return res.status(400).json({ error: `Request must contain result and recipe fields` });
+    }
+    if (recipe.length < 2) {
+        return res.status(400).json({
+            error: `Recipe must contain at least 2 elements`
+        });
+    }
     const resultData = await Element.findById(mongoose.Types.ObjectId(result)).lean();
     if (!resultData) {
         return res.status(404).json({
