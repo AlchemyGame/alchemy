@@ -12,7 +12,11 @@ const PORT = process.env.PORT || config.appPort;
 const mongoDB = config.mongoUrl;
 
 mongoose.set("useCreateIndex", true);
-mongoose.connect(mongoDB, { useNewUrlParser: true });
+mongoose.connect(mongoDB, {
+  useCreateIndex: true,
+  useNewUrlParser: true,
+  useFindAndModify: false
+});
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
