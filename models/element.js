@@ -20,12 +20,12 @@ const Element = exports.Element = mongoose.model("Element", schema);
 Element.findOne({}, async (err, el) => {
   if (err) return err;
   if (!el) {
-    const category = await Category.findOne({ name: "Основные" });
+    const category = await Category.findOne({ name: "Elements" });
     elements = [
-      { name: "Вода", category },
-      { name: "Земля", category },
-      { name: "Воздух", category },
-      { name: "Огонь", category }
+      { name: "Air", category },
+      { name: "Earth", category },
+      { name: "Fire", category },
+      { name: "Water", category }
     ];
 
     Element.insertMany(elements, (error, elements) => {
