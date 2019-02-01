@@ -17,6 +17,7 @@ function getElements(req, res) {
         { $unwind: "$category" },
         { $project: {
             name: 1,
+            description: 1,
             category: "$category.name"
         }}
     ];

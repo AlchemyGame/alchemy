@@ -9,6 +9,9 @@ const schema = new Schema({
     required: true,
     unique: true
   },
+  description: {
+    type: String
+  },
   category: {
     type: Schema.Types.ObjectId,
     ref: "Category",
