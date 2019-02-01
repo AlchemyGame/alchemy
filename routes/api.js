@@ -8,7 +8,9 @@ const {
 
 const {
   getCategories,
-  addCategory
+  addCategory,
+  updateCategory,
+  deleteCategory
 } = require("../api/categories");
 
 const {
@@ -21,6 +23,8 @@ router.post("/element/add", addElement);
 
 router.get("/categories", getCategories);
 router.post("/category/add", addCategory);
+router.put("/category/update", updateCategory);
+router.delete("/category/delete", deleteCategory);
 
 router.get("/recipes", getRecipes);
 router.post("/recipe/add", addRecipe);
