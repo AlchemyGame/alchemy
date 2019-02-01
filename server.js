@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+const multer = require("multer");
 
 const config = require("./config");
 const api = require("./routes/api");
@@ -17,8 +17,9 @@ mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+const upload = multer();
+
+app.use(upload.any());
 app.use("/api", api);
 
 app.set("port", PORT);
