@@ -7,8 +7,47 @@ const { Recipe } = require("../models/recipe");
 const { Element } = require("../models/element");
 
 function getRecipes(req, res) {
-    Recipe.find({}, (err, recipes) => {
-        res.status(200).json({response: recipes});
+    const pipeline = [
+        { $lookup: {
+            from: "elements",
+            localField: "result",
+            foreignField: "_id",
+            as: "result"
+        }},
+        { $lookup: {
+            from: "elements",
+            localField: "firstElement",
+            foreignField: "_id",
+            as: "firstElement"
+        }},
+        { $lookup: {
+            from: "elements",
+            localField: "secondElement",
+            foreignField: "_id",
+            as: "secondElement"
+        }},
+        { $unwind: "$result" },
+        { $unwind: "$firstElement" },
+        { $unwind: "$secondElement" },
+        { $project: {
+            __v: 0,
+            result: {
+                category: 0,
+                __v: 0
+            },
+            firstElement: {
+                category: 0,
+                __v: 0
+            },
+            secondElement: {
+                category: 0,
+                __v: 0
+            }
+        }}
+    ];
+    Recipe.aggregate(pipeline).exec((err, recipes) => {
+        if (err) return res.status(500).json({err});
+        return res.status(200).json({response: recipes});
     });
 }
 
