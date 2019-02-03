@@ -1,6 +1,7 @@
 module.exports = {
     getRecipes,
-    addRecipe
+    addRecipe,
+    deleteRecipe
 };
 
 const mongoose = require("mongoose");
@@ -59,6 +60,7 @@ async function addRecipe(req, res) {
     }
     recipe.map(async recipeElement =>
         await Element.findById(recipeElement).lean().exec((err, element) => {
+            // TODO: Rewrite, error doesn't stop request
             if (!element) return res.status(404).json({
                 error: `Element '${recipeElement}' doesn't exists. Recipe can not be created`
             });
@@ -85,5 +87,15 @@ async function addRecipe(req, res) {
                 error: `This recipe is already exists`
             });
         }
+    });
+}
+
+function deleteRecipe(req, res) {
+    const { recipeId } = req.body;
+    if (!recipeId) return res.status(400).json({ error: `Request must contain recipeId field` });
+
+    Recipe.findByIdAndRemove(recipeId, (error, response) => {
+        if (error) return res.status(500).json({ error });
+        return res.status(200).json({ response });
     });
 }
