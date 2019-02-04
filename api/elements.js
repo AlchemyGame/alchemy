@@ -1,10 +1,12 @@
 module.exports = {
   getElements,
-  addElement
+  addElement,
+  deleteElement
 };
 
 const { Element } = require("../models/element");
 const { Category } = require("../models/category");
+const { Recipe } = require("../models/recipe");
 
 function getElements(req, res) {
   const pipeline = [
@@ -48,5 +50,34 @@ async function addElement(req, res) {
     } else {
       return res.status(409).json({ error: `Element with name '${name}' is already exists` });
     }
+  });
+}
+
+async function deleteElement(req, res) {
+  const {elementId} = req.body;
+
+  const pipeline = [
+    { $project: {
+      _id: 0,
+      __v: 0
+    }},
+    { $unwind: "$recipe" }
+  ];
+
+  let list = new Set();
+  const elements = await Recipe.aggregate(pipeline);
+  elements.map(element => {
+    list.add(element.recipe.toString());
+    list.add(element.result.toString());
+  });
+  list = [...list];
+
+  if (list.includes(elementId)) return res.status(400).json({
+    error: `This element is used in the recipe. You have to change the recipe before deleting this element`
+  });
+
+  Element.findByIdAndRemove(elementId, (error, response) => {
+    if (error) return res.status(500).json({ error });
+    return res.status(200).json({ response });
   });
 }
