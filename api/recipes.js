@@ -43,49 +43,52 @@ function getRecipes(req, res) {
 }
 
 async function addRecipe(req, res) {
-  const { result, recipe } = req.body;
-  if (!result || ! recipe) return res.status(400).json({
-    error: `Request must contain result and recipe fields`
+  const { recipe, result } = req.body;
+  if (!recipe || !result) return res.status(400).json({
+    error: `Request must contain recipe and result fields`
   });
   if (recipe.length < 2) return res.status(400).json({
     error: `Recipe must contain at least 2 elements`
   });
+  recipe.sort((a, b) => a < b ? -1 : (a > b) ? 1 : 0);
 
   const resultData = await Element.findById(mongoose.Types.ObjectId(result)).lean();
   if (!resultData) return res.status(404).json({
-    error: `Element ${result} doesn't exists. Recipe can not be created`
+    error: `Element ${result} doesn't exist. Recipe can not be created`
   });
 
-  recipe.map(async recipeElement =>
-    await Element.findById(recipeElement).lean().exec((err, element) => {
-      // TODO: Rewrite, error doesn't stop request
-      if (!element) return res.status(404).json({
-        error: `Element '${recipeElement}' doesn't exists. Recipe can not be created`
-      });
-    })
-  );
+  const countUnique = arr => new Set(arr).size;
 
-  const recipeArr = recipe.sort((a, b) => a < b ? -1 : (a > b) ? 1 : 0);
-  Recipe.findOne({
-    recipe: recipeArr,
-    result: resultData._id
-  }, (error, recipe) => {
-    if (error) return res.status(500).json({error});
-    if (!recipe) {
-      const newRecipe = new Recipe({
-        recipe: recipeArr,
-        result: resultData._id
-      });
-      newRecipe.save(error => {
-        if (error) return res.status(500).json({ error });
-        return res.status(201).json({ response: newRecipe });
-      });
-    } else {
-      return res.status(409).json({
-        error: `This recipe is already exists`
-      });
-    }
-  });
+  const recipeElements = await Element.find({ _id: { $in: recipe } }).lean();
+  if (countUnique(recipe) === recipeElements.length) {
+    Recipe.findOne({
+      recipe,
+      result: resultData._id
+    }, (error, existingRecipe) => {
+      if (error) return res.status(500).json({error});
+      if (!existingRecipe) {
+        const newRecipe = new Recipe({
+          recipe,
+          result: resultData._id
+        });
+        newRecipe.save(error => {
+          if (error) return res.status(500).json({ error });
+          return res.status(201).json({ response: newRecipe });
+        });
+      } else {
+        return res.status(409).json({
+          error: `This recipe is already exists`
+        });
+      }
+    });
+  } else {
+    const toRemove = recipeElements.map(el => el._id.toString());
+    const notFound = recipe.filter(el => !toRemove.includes(el));
+    return res.status(404).json({
+      error: `Some elements doesn't exist. Recipe can not be created`,
+      notFound
+    });
+  }
 }
 
 function deleteRecipe(req, res) {

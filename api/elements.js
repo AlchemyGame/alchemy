@@ -36,7 +36,7 @@ async function addElement(req, res) {
 
   if (!categoryData) {
     return res.status(404).json({
-      error: `Category ${category} doesn't exists.  Element can not be created`
+      error: `Category ${category} doesn't exist. Element can not be created`
     });
   }
 
