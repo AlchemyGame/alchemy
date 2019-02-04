@@ -12,6 +12,7 @@ const { Element } = require("../models/element");
 
 function getRecipes(req, res) {
   const pipeline = [
+    { $unwind: "$recipe" },
     { $lookup: {
       from: "elements",
       localField: "recipe",
@@ -25,6 +26,12 @@ function getRecipes(req, res) {
       as: "result"
     }},
     { $unwind: "$result" },
+    { $unwind: "$recipe" },
+    { $group: {
+      _id: "$_id",
+      result: { $first: "$result" },
+      recipe: { $push: "$recipe" }
+    }},
     { $project: {
       __v: 0,
       recipe: {
