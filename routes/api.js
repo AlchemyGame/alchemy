@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   getElements,
   addElement,
+  updateElement,
   deleteElement
 } = require("../api/elements");
 
@@ -22,6 +23,7 @@ const {
 
 router.get("/elements", getElements);
 router.post("/element/add", addElement);
+router.put("/element/update", updateElement);
 router.delete("/element/delete", deleteElement);
 
 router.get("/categories", getCategories);

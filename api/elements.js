@@ -1,6 +1,7 @@
 module.exports = {
   getElements,
   addElement,
+  updateElement,
   deleteElement
 };
 
@@ -51,6 +52,23 @@ async function addElement(req, res) {
       return res.status(409).json({ error: `Element with name '${name}' is already exists` });
     }
   });
+}
+
+function updateElement(req, res) {
+  const { elementId, ...elementData } = req.body;
+  if (!elementId) return res.status(400).json({
+    error: `Request must contain elementId field`
+  });
+
+  Element.findByIdAndUpdate(
+    elementId,
+    elementData,
+    { new: true },
+    (error, newElement) => {
+      if (error) return res.status(500).json({ error });
+      return res.status(201).json({ response: newElement });
+    }
+  );
 }
 
 async function deleteElement(req, res) {
