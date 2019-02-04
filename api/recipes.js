@@ -1,6 +1,7 @@
 module.exports = {
   getRecipes,
   addRecipe,
+  updateRecipe,
   deleteRecipe
 };
 
@@ -86,6 +87,46 @@ async function addRecipe(req, res) {
     const notFound = recipe.filter(el => !toRemove.includes(el));
     return res.status(404).json({
       error: `Some elements doesn't exist. Recipe can not be created`,
+      notFound
+    });
+  }
+}
+
+async function updateRecipe(req, res) {
+  const { recipeId, newRecipe, newResult } = req.body;
+  if (!recipeId || !newRecipe || !newResult) return res.status(400).json({
+    error: `Request must contain recipeId, newRecipe and newResult fields`
+  });
+  if (newRecipe.length < 2) return res.status(400).json({
+    error: `Recipe must contain at least 2 elements`
+  });
+  newRecipe.sort((a, b) => a < b ? -1 : (a > b) ? 1 : 0);
+
+  const resultData = await Element.findById(mongoose.Types.ObjectId(newResult)).lean();
+  if (!resultData) return res.status(404).json({
+    error: `Element ${newResult} doesn't exist. Recipe can not be updated`
+  });
+
+  const countUnique = arr => new Set(arr).size;
+
+  const recipeElements = await Element.find({ _id: { $in: newRecipe } }).lean();
+  if (countUnique(newRecipe) === recipeElements.length) {
+    Recipe.findByIdAndUpdate(
+      recipeId,
+      {
+        recipe: newRecipe,
+        result: resultData._id
+      },
+      { new: true },
+      (error, newRecipe) => {
+        if (error) return res.status(500).json({ error });
+        return res.status(201).json({ response: newRecipe });
+      });
+  } else {
+    const toRemove = recipeElements.map(el => el._id.toString());
+    const notFound = newRecipe.filter(el => !toRemove.includes(el));
+    return res.status(404).json({
+      error: `Some elements doesn't exist. Recipe can not be updated`,
       notFound
     });
   }

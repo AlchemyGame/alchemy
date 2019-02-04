@@ -18,6 +18,7 @@ const {
 const {
   getRecipes,
   addRecipe,
+  updateRecipe,
   deleteRecipe
 } = require("../api/recipes");
 
@@ -33,6 +34,7 @@ router.delete("/category/delete", deleteCategory);
 
 router.get("/recipes", getRecipes);
 router.post("/recipe/add", addRecipe);
+router.put("/recipe/update", updateRecipe);
 router.delete("/recipe/delete", deleteRecipe);
 
 module.exports = router;
