@@ -1,2 +1,2 @@
 (window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["adminDashboard"],{a83b:function(n,a,e){"use strict";e.r(a);var t=function(){var n=this,a=n.$createElement;n._self._c;return n._m(0)},r=[function(){var n=this,a=n.$createElement,e=n._self._c||a;return e("div",{staticClass:"jumbotron"},[e("h1",[n._v("Admin dashboard")])])}],s={name:"AdminDashboard"},i=s,o=e("2877"),c=Object(o["a"])(i,t,r,!1,null,null,null);a["default"]=c.exports}}]);
-//# sourceMappingURL=adminDashboard.ec1595fc.js.map
+//# sourceMappingURL=adminDashboard.6363c5e3.js.map
