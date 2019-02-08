@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["adminDashboard"],{"115f":function(n,a,t){"use strict";t.r(a);var o=function(){var n=this,a=n.$createElement,t=n._self._c||a;return t("b-container",[t("b-row",[t("b-col",{attrs:{cols:"12"}},[t("div",{staticClass:"jumbotron"},[t("h1",[n._v("Admin dashboard")])])])],1)],1)},s=[],r={name:"AdminDashboard"},e=r,c=t("2877"),i=Object(c["a"])(e,o,s,!1,null,null,null);a["default"]=i.exports}}]);
+//# sourceMappingURL=adminDashboard.ceb04e68.js.map
