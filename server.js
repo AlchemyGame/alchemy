@@ -1,9 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
+const path = require("path");
 
 const config = require("./config");
 const api = require("./routes/api");
+const clientIndex = path.join(__dirname, "public/index.html");
 
 const app = express();
 app.use(express.static("public"));
@@ -25,6 +27,10 @@ const upload = multer();
 
 app.use(upload.any());
 app.use("/api", api);
+
+app.get("*", (req, res, next) => {
+  res.sendFile(clientIndex);
+});
 
 app.set("port", PORT);
 
