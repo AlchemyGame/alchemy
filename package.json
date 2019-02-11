@@ -1,6 +1,21 @@
 {
   "name": "alchemy",
   "version": "0.0.0",
+  "description": "Online game",
+  "author": "VChet",
+  "contributors": [
+    "Hyuugo",
+    "i-ka"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/AlchemyGame/alchemy",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlchemyGame/alchemy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AlchemyGame/alchemy/issues"
+  },
   "scripts": {
     "database": "mongod --bind_ip 127.0.0.1 --port 27017",
     "server": "nodemon server.js"
