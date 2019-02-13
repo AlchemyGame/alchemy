@@ -31,7 +31,7 @@ function getElements(req, res) {
 }
 
 async function addElement(req, res) {
-  const { name, category } = req.body;
+  const { name, category, description } = req.body;
   const categoryData = await Category.findById(category);
 
   if (!categoryData) {
@@ -43,7 +43,7 @@ async function addElement(req, res) {
   Element.findOne({name}, (error, element) => {
     if (error) return res.status(500).json({error});
     if (!element) {
-      const newElement = new Element({ name, category });
+      const newElement = new Element({ name, category, description });
       newElement.save(error => {
         if (error) return res.status(500).json({ error });
         return res.status(201).json({ response: newElement });
