@@ -3,3 +3,4 @@ require("mongoose");
 
 require("./test/categories");
 require("./test/elements");
+require("./test/recipes");
