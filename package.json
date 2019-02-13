@@ -18,7 +18,8 @@
   },
   "scripts": {
     "database": "mongod --bind_ip 127.0.0.1 --port 27017",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "test": "mocha tests.js --timeout 5000 --exit"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
