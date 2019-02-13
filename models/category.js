@@ -8,14 +8,4 @@ const schema = new Schema({
   }
 });
 
-const Category = exports.Category = mongoose.model("Category", schema);
-
-Category.findOne({}, (err, cat) => {
-  if (err) return err;
-  if (!cat) {
-    newCategory = new Category({ name: "Elements" });
-    newCategory.save(err => {
-      console.log({err, newCategory});
-    });
-  }
-});
+exports.Category = mongoose.model("Category", schema);
