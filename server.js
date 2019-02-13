@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
+const morgan = require("morgan");
 
 const config = require("./config");
 const api = require("./routes/api");
@@ -25,6 +26,7 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 const upload = multer();
 
+app.use(morgan("dev"));
 app.use(upload.any());
 app.use("/api", api);
 
