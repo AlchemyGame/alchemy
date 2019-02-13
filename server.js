@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const morgan = require("morgan");
+const bodyParser = require("body-parser");
 
 const config = require("./config");
 const api = require("./routes/api");
@@ -26,7 +27,11 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 const upload = multer();
 
-app.use(morgan("dev"));
+if (process.env.NODE_ENV !== "test") {
+  app.use(morgan("dev"));
+}
+
+app.use(bodyParser.json());
 app.use(upload.any());
 app.use("/api", api);
 
@@ -39,3 +44,5 @@ app.set("port", PORT);
 app.listen(app.get("port"), () => {
   console.log(`Server is up and running on port ${PORT}`);
 });
+
+module.exports = app;
