@@ -50,6 +50,30 @@ describe("Category tests", () => {
         done();
       });
   });
+  it("Reject category creation (already exists)", done => {
+    agent
+      .post("/api/category/add")
+      .send({ name: "Test Category" })
+      .end((err, res) => {
+        if (err) return done(err);
+        res.should.have.status(409);
+        res.body.should
+          .be.an("object")
+          .have.property("error").equal("Category with name 'Test Category' is already exists");
+        done();
+      });
+  });
+  it("Reject category update (missing parameters)", async () => {
+    const res = await agent
+      .put("/api/category/update")
+      .send({
+        name: "Updated category name"
+      });
+    res.should.have.status(400);
+    res.body.should
+      .be.an("object")
+      .have.property("error").equal("Request must contain categoryId and name fields");
+  });
   it("Update existing category", async () => {
     const category = await Category.findOne({ name: "Test Category" }).lean();
     const res = await agent

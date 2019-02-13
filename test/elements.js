@@ -23,8 +23,6 @@ describe("Element tests", () => {
       { name: "Water", category }
     ];
     Element.insertMany(elements, err => err && console.error(err));
-    const newCategory = new Category({ name: "Elements" });
-    newCategory.save(error => error && console.error(error));
   });
 
   it("Check basic elements", done => {
@@ -57,6 +55,36 @@ describe("Element tests", () => {
         name: "Test Element",
         description: "Test"
       });
+  });
+  it("Reject element creation (missing category)", async () => {
+    const generateId = (rnd = r16 => Math.floor(r16).toString(16)) =>
+      rnd(Date.now() / 1000) + " ".repeat(16).replace(/./g, () => rnd(Math.random() * 16));
+    const randomId = generateId();
+    const res = await agent
+      .post("/api/element/add")
+      .send({
+        name: "Test Element",
+        description: "Test",
+        category: randomId
+      });
+    res.should.have.status(404);
+    res.body.should
+      .be.an("object")
+      .have.property("error").equal(`Category ${randomId} doesn't exist. Element can not be created`);
+  });
+  it("Reject element creation (already exists)", async () => {
+    const category = await Category.findOne({ name: "Elements" }).lean();
+    const res = await agent
+      .post("/api/element/add")
+      .send({
+        name: "Test Element",
+        description: "Test",
+        category
+      });
+    res.should.have.status(409);
+    res.body.should
+      .be.an("object")
+      .have.property("error").equal("Element with name 'Test Element' is already exists");
   });
   it("Update existing element", async () => {
     const element = await Element.findOne({ name: "Test Element" }).lean();
