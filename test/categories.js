@@ -52,7 +52,7 @@ describe("Category tests", () => {
       });
   });
   it("Update existing category", async () => {
-    const category = await Category.findOne({ name: "Test Category" });
+    const category = await Category.findOne({ name: "Test Category" }).lean();
     const res = await agent
       .put("/api/category/update")
       .send({
@@ -66,7 +66,7 @@ describe("Category tests", () => {
       .have.property("name").equal("Updated category name");
   });
   it("Delete category", async () => {
-    const category = await Category.findOne({ name: "Updated category name" });
+    const category = await Category.findOne({ name: "Updated category name" }).lean();
     const res = await agent
       .delete("/api/category/delete")
       .send({ categoryId: category });
