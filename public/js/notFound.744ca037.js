@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["notFound"],{"0b6a":function(n,t,o){"use strict";o.r(t);var e=function(){var n=this,t=n.$createElement,o=n._self._c||t;return o("b-container",[o("b-row",[o("b-col",{attrs:{cols:"12"}},[o("div",{staticClass:"jumbotron"},[o("h1",[n._v("Страница не найдена!")])])])],1)],1)},a=[],s={name:"404"},c=s,l=o("2877"),r=Object(l["a"])(c,e,a,!1,null,null,null);t["default"]=r.exports}}]);
-//# sourceMappingURL=notFound.744ca037.js.map
