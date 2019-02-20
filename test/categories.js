@@ -63,17 +63,6 @@ describe("Category tests", () => {
         done();
       });
   });
-  it("Reject category update (missing parameters)", async () => {
-    const res = await agent
-      .put("/api/category/update")
-      .send({
-        name: "Updated category name"
-      });
-    res.should.have.status(400);
-    res.body.should
-      .be.an("object")
-      .have.property("error").equal("Request must contain categoryId and name fields");
-  });
   it("Update existing category", async () => {
     const category = await Category.findOne({ name: "Test Category" }).lean();
     const res = await agent
@@ -87,6 +76,17 @@ describe("Category tests", () => {
       .be.an("object")
       .have.property("response")
       .have.property("name").equal("Updated category name");
+  });
+  it("Reject category update (missing parameters)", async () => {
+    const res = await agent
+      .put("/api/category/update")
+      .send({
+        name: "Updated category name"
+      });
+    res.should.have.status(400);
+    res.body.should
+      .be.an("object")
+      .have.property("error").equal("Request must contain categoryId and name fields");
   });
   it("Delete category", async () => {
     const category = await Category.findOne({ name: "Updated category name" }).lean();

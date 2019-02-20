@@ -7,6 +7,7 @@ const { Element } = require("../models/element");
 
 const server = require("../server");
 const agent = supertest.agent(server);
+const { generateId } = require("./common");
 
 chai.should();
 chai.use(chaiHttp);
@@ -25,7 +26,7 @@ describe("Element tests", () => {
     Element.insertMany(elements, err => err && console.error(err));
   });
 
-  it("Check basic elements", done => {
+  it("Count basic elements", done => {
     agent
       .get("/api/elements")
       .end((err, res) => {
@@ -53,24 +54,9 @@ describe("Element tests", () => {
       .have.property("response")
       .contain({
         name: "Test Element",
-        description: "Test"
-      });
-  });
-  it("Reject element creation (missing category)", async () => {
-    const generateId = (rnd = r16 => Math.floor(r16).toString(16)) =>
-      rnd(Date.now() / 1000) + " ".repeat(16).replace(/./g, () => rnd(Math.random() * 16));
-    const randomId = generateId();
-    const res = await agent
-      .post("/api/element/add")
-      .send({
-        name: "Test Element",
         description: "Test",
-        category: randomId
+        category: category._id.toString()
       });
-    res.should.have.status(404);
-    res.body.should
-      .be.an("object")
-      .have.property("error").equal(`Category ${randomId} doesn't exist. Element can not be created`);
   });
   it("Reject element creation (already exists)", async () => {
     const category = await Category.findOne({ name: "Elements" }).lean();
@@ -85,6 +71,20 @@ describe("Element tests", () => {
     res.body.should
       .be.an("object")
       .have.property("error").equal("Element with name 'Test Element' is already exists");
+  });
+  it("Reject element creation (missing category)", async () => {
+    const randomId = generateId();
+    const res = await agent
+      .post("/api/element/add")
+      .send({
+        name: "Test Element",
+        description: "Test",
+        category: randomId
+      });
+    res.should.have.status(404);
+    res.body.should
+      .be.an("object")
+      .have.property("error").equal(`Category ${randomId} doesn't exist. Element can not be created`);
   });
   it("Update existing element", async () => {
     const element = await Element.findOne({ name: "Test Element" }).lean();
