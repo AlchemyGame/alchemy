@@ -15,7 +15,6 @@ const PORT = process.env.PORT || config.appPort;
 
 const mongoDB = config.mongoUrl;
 
-mongoose.set("useCreateIndex", true);
 mongoose.connect(mongoDB, {
   useCreateIndex: true,
   useNewUrlParser: true,
