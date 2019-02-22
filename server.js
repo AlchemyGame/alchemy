@@ -32,6 +32,7 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(upload.any());
 app.use("/api", api);
 
