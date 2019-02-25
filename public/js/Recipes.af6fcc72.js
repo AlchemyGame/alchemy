@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["Recipes"],{ffc0:function(e,n,t){"use strict";t.r(n);var c=function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("b-container",[t("b-row",[t("b-col",{attrs:{cols:"12"}},[t("div",{staticClass:"jumbotron"},[t("h1",[e._v("Recipes")])])])],1)],1)},s=[],o={name:"Recipes"},a=o,i=t("2877"),l=Object(i["a"])(a,c,s,!1,null,null,null);n["default"]=l.exports}}]);
-//# sourceMappingURL=Recipes.af6fcc72.js.map

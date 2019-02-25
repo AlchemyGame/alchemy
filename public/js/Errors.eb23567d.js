@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["Errors"],{"6b32":function(r,n,t){"use strict";t.r(n);var o=function(){var r=this,n=r.$createElement,t=r._self._c||n;return t("b-container",[t("b-row",[t("b-col",{attrs:{cols:"12"}},[t("div",{staticClass:"jumbotron"},[t("h1",[r._v("Страница не найдена!")])])])],1)],1)},s=[],e={name:"Errors"},a=e,c=t("2877"),l=Object(c["a"])(a,o,s,!1,null,null,null);n["default"]=l.exports}}]);
-//# sourceMappingURL=Errors.eb23567d.js.map

@@ -1,2 +1,2 @@
 (window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["Users"],{"20fb":function(s,e,n){"use strict";n.r(e);var t=function(){var s=this,e=s.$createElement,n=s._self._c||e;return n("b-container",[n("b-row",[n("b-col",{attrs:{cols:"12"}},[n("div",{staticClass:"jumbotron"},[n("h1",[s._v("Users")])])])],1)],1)},r=[],o={name:"Users"},a=o,c=n("2877"),l=Object(c["a"])(a,t,r,!1,null,null,null);e["default"]=l.exports}}]);
-//# sourceMappingURL=Users.c83da3a8.js.map
+//# sourceMappingURL=Users.4aeee5f9.js.map
