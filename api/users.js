@@ -13,6 +13,7 @@ module.exports = {
 const passport = require("passport");
 
 const { User } = require("../models/user");
+const { sendEmail } = require("./mail");
 
 function login(req, res, next) {
   passport.authenticate("local", (error, user, info) => {
@@ -84,8 +85,7 @@ function createAccount(req, res) {
     html += `Email: ${req.body.email.toLowerCase()}<br/>`;
     html += `Password: ${password}<br/><br/>`;
     html += `<a href="${req.protocol}://${req.get("host")}/login">Alchemy</a>`;
-
-    // sendEmail(req.body.email, "Account registration", html, res, userData)
+    sendEmail(req.body.email, "Account registration", html, res);
   });
 }
 
@@ -127,7 +127,7 @@ function resetPassword(req, res) {
     html += `We have generated a new password for your account.<br/>`;
     html += `Your new password: ${user.password}<br/><br/>`;
     html += `<a href="${req.protocol}://${req.get("host")}/login">Alchemy</a>`;
-    // sendEmail(req.body.email, "Your new password in Alchemy", html, res, req.body.email);
+    sendEmail(req.body.email, "Your new password in Alchemy", html, res);
   });
 }
 

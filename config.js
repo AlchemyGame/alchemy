@@ -15,5 +15,12 @@ module.exports = {
     resave: true,
     saveUninitialized: false
   },
+  nodemailer: {
+    service: "gmail",
+    auth: {
+      user: "MAILBOX",
+      pass: "PASSWORD"
+    }
+  },
   ...overwriteConfig
 };
