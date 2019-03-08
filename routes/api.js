@@ -2,6 +2,18 @@ const express = require("express");
 const router = express.Router();
 
 const {
+  login,
+  checkSession,
+  logout,
+  getUsersList,
+  createAccount,
+  updateInfo,
+  changeAccountStatus,
+  resetPassword,
+  updatePassword
+} = require("../api/users");
+
+const {
   getElements,
   addElement,
   updateElement,
@@ -31,6 +43,17 @@ function isAdmin(req, res, next) {
   if (req.user.role === "Admin") return next();
   res.status(403).json({ error: "You are not authorized to perform this action" });
 }
+
+router.post("/login", login);
+router.get("/login", checkSession);
+router.get("/logout", isAuthenticated, logout);
+
+router.get("/users", isAuthenticated, isAdmin, getUsersList);
+router.post("/account/add", isAuthenticated, isAdmin, createAccount);
+router.put("/account/update", isAuthenticated, isAdmin, updateInfo);
+router.put("/account/disable", isAuthenticated, isAdmin, changeAccountStatus);
+router.put("/account/password/reset", resetPassword);
+router.put("/account/password/update", isAuthenticated, updatePassword);
 
 router.get("/elements", isAuthenticated, getElements);
 router.post("/element/add", isAuthenticated, isAdmin, addElement);
