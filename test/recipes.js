@@ -7,7 +7,7 @@ const { Element } = require("../models/element");
 
 const server = require("../server");
 const agent = supertest.agent(server);
-const { generateId } = require("./common");
+const { generateId } = require("./helpers");
 
 chai.should();
 chai.use(chaiHttp);
