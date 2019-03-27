@@ -59,7 +59,7 @@ schema.statics.authorize = function(email, password, done) {
   email = email.toLowerCase();
 
   User.findOne({ email }, (err, user) => {
-    if (err) console.log({err});
+    if (err) console.log({ err });
     if (user) {
       if (user.checkPassword(password)) {
         user = user.toObject();

@@ -24,11 +24,11 @@ function login(req, res, next) {
       // Cookie expires at end of session
       req.session.cookie.expires = false;
     }
-    if (user) console.log({ user });
-    if (info) console.log({ info });
+    // if (user) console.log({ user });
+    // if (info) console.log({ info });
     if (user && user.isDisabled) return res.status(404).json({ error: "This user is disabled" });
     if (error || !user) {
-      console.log({ error });
+      // console.log({ error });
       return res.status(403).json({ error });
     }
 
@@ -85,6 +85,7 @@ function createAccount(req, res) {
     html += `Email: ${req.body.email.toLowerCase()}<br/>`;
     html += `Password: ${password}<br/><br/>`;
     html += `<a href="${req.protocol}://${req.get("host")}/login">Alchemy</a>`;
+    if (process.env.NODE_ENV === "test") return res.json({ html });
     sendEmail(req.body.email, "Account registration", html, res);
   });
 }
