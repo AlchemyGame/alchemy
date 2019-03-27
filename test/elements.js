@@ -13,17 +13,33 @@ chai.should();
 chai.use(chaiHttp);
 
 describe("Element tests", () => {
-  before(async () => {
+  before(done => {
     Element.deleteMany({}, err => err && console.error(err));
 
-    const category = await Category.findOne({ name: "Elements" }).lean();
-    const elements = [
-      { name: "Air", category },
-      { name: "Earth", category },
-      { name: "Fire", category },
-      { name: "Water", category }
-    ];
-    Element.insertMany(elements, err => err && console.error(err));
+    Category.findOne({ name: "Elements" }).lean().exec((error, category) => {
+      if (error) return done(error);
+      const elements = [
+        { name: "Air", category },
+        { name: "Earth", category },
+        { name: "Fire", category },
+        { name: "Water", category }
+      ];
+      Element.insertMany(elements, error => {
+        if (error) return done(error);
+
+        agent
+          .post("/api/login")
+          .type("form")
+          .send({
+            email: "admin@test.com",
+            password: "1"
+          })
+          .end((error, res) => {
+            done(error);
+          });
+        console.log("logged in");
+      });
+    });
   });
 
   it("Count basic elements", done => {

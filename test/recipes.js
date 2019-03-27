@@ -15,6 +15,14 @@ chai.use(chaiHttp);
 describe("Recipe tests", () => {
   before(async () => {
     Recipe.deleteMany({}, err => err && console.error(err));
+    agent
+      .post("/api/login")
+      .type("form")
+      .send({
+        email: "admin@test.com",
+        password: "1"
+      })
+      .end(error => error && console.error(err));
   });
 
   it("Add new recipe", async () => {

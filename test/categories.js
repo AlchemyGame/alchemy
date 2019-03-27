@@ -15,9 +15,18 @@ describe("Category tests", () => {
     Category.deleteMany({}, err => err && done(err));
 
     const newCategory = new Category({ name: "Elements" });
-    newCategory.save(error => {
-      done(error);
-    });
+    newCategory.save(error => error && console.error(error));
+
+    agent
+      .post("/api/login")
+      .type("form")
+      .send({
+        email: "admin@test.com",
+        password: "1"
+      })
+      .end(error => {
+        done(error);
+      });
   });
 
   it("Check basic category", done => {
