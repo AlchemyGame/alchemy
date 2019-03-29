@@ -107,8 +107,9 @@ User.findOne({}, (err, usr) => {
       username: "Admin",
       role: "Admin",
       password: "1"
-    }, (err, user) => {
-      console.log({ err, user });
+    }, (error, user) => {
+      if (error) console.error({ error });
+      console.log({ user });
     });
   }
 });
