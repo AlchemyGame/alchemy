@@ -1,12 +1,12 @@
 # Alchemy
-![](https://img.shields.io/david/AlchemyGame/alchemy.svg?style=flat)
-![](https://img.shields.io/david/dev/AlchemyGame/alchemy.svg?label=devDependencies)
+[![dep](https://img.shields.io/david/AlchemyGame/alchemy.svg?style=flat)](https://david-dm.org/AlchemyGame/alchemy)
+[![devDep](https://img.shields.io/david/dev/AlchemyGame/alchemy.svg?label=devDependencies)](https://david-dm.org/AlchemyGame/alchemy?type=dev)
 
 ## Usage
 1. Install [Git command line client](https://git-scm.com/downloads).
 1. Install [Node.js](https://nodejs.org/).
-1. Fork this repository into your account.
-1. Clone this repository.
+1. [Fork](https://github.com/AlchemyGame/alchemy/fork) this repository into your account.
+1. Clone forked repository.
 1. Install all dependencies `npm install`.
 1. Install [mongoDB](https://www.mongodb.com/download-center/community).
 1. Start database `mongod`.
