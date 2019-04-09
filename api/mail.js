@@ -10,8 +10,15 @@ const sendEmail = (to, subject, html, res) => {
     html
   };
   transporter.sendMail(data, (error, info) => {
-    if (error) return res.status(500).json({ error });
+    if (error) {
+      if (error.code === "EAUTH") {
+        console.log("MAILER: Wrong credentials");
+        return res.status(500).json({ error: "Data has been updated but mailer is not available" });
+      }
+      return res.status(500).json({ error });
+    }
     console.log({ info });
+    return res.status(201).json({ response: "Successful registration" });
   });
 };
 
