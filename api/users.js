@@ -85,14 +85,17 @@ function getUsersList(req, res) {
 
 function createAccount(req, res) {
   const { ...userData } = req.body;
-  const password = Math.random().toString(36).slice(2);
-  User.createNew({ password, ...userData }, (error, user) => {
+  if (!userData.password) {
+    userData.password = Math.random().toString(36).slice(2);
+  }
+  userData.role = "User";
+  User.createNew(userData, error => {
     if (error) return res.status(409).json({ error });
     let html = "";
     html += "You are registered in Alchemy.<br/><br/>";
     html += "Your login details:<br/>";
-    html += `Email: ${req.body.email.toLowerCase()}<br/>`;
-    html += `Password: ${password}<br/><br/>`;
+    html += `Email: ${userData.email.toLowerCase()}<br/>`;
+    html += `Password: ${userData.password}<br/><br/>`;
     html += `<a href="${req.protocol}://${req.get("host")}/login">Alchemy</a>`;
     if (process.env.NODE_ENV === "test") return res.json({ html });
     sendEmail(req.body.email, "Account registration", html, res);

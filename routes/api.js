@@ -55,7 +55,7 @@ router.get("/logout", isAuthenticated, logout);
 router.get("/stats", isAuthenticated, getStats);
 
 router.get("/users", isAuthenticated, isAdmin, getUsersList);
-router.post("/account/add", isAuthenticated, isAdmin, createAccount);
+router.post("/account/add", createAccount);
 router.put("/account/update", isAuthenticated, isAdmin, updateInfo);
 router.put("/account/disable", isAuthenticated, isAdmin, changeAccountStatus);
 router.put("/account/password/reset", resetPassword);
