@@ -17,8 +17,9 @@
     "url": "https://github.com/AlchemyGame/alchemy/issues"
   },
   "scripts": {
-    "database": "mongod --bind_ip 127.0.0.1 --port 27017",
+    "start": "node server.js",
     "server": "nodemon server.js",
+    "database": "mongod --bind_ip 127.0.0.1 --port 27017",
     "test": "mocha tests.js --timeout 5000 --exit"
   },
   "dependencies": {
