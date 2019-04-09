@@ -7,11 +7,14 @@ const config = require("../config");
 const schema = new Schema({
   email: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
+    lowercase: true
   },
   username: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
   role: {
     type: String,
@@ -56,7 +59,6 @@ schema.methods.checkPassword = function(password) {
 
 schema.statics.authorize = function(email, password, done) {
   const User = this;
-  email = email.toLowerCase();
 
   User.findOne({ email }, (err, user) => {
     if (err) console.log({ err });
@@ -74,7 +76,6 @@ schema.statics.authorize = function(email, password, done) {
 
 schema.statics.createNew = function(obj, done) {
   const User = this;
-  obj.email = obj.email.toLowerCase();
 
   User.findOne({ email: obj.email }, (err, user) => {
     if (err) console.log({ err });
