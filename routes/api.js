@@ -52,7 +52,7 @@ router.post("/login", login);
 router.get("/login", checkSession);
 router.get("/logout", isAuthenticated, logout);
 
-router.get("/stats", getStats);
+router.get("/stats", isAuthenticated, getStats);
 
 router.get("/users", isAuthenticated, isAdmin, getUsersList);
 router.post("/account/add", isAuthenticated, isAdmin, createAccount);

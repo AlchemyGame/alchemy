@@ -19,7 +19,7 @@ async function getStats(req, res, next) {
   });
   const bannedUsers = await User.countDocuments({ isDisabled: true });
 
-  res.json({
+  res.status(200).json({
     usersCount: users,
     activeUsersCount: activeUsers,
     bannedUsersCount: bannedUsers,

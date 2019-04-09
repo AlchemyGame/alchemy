@@ -37,7 +37,6 @@ describe("Element tests", () => {
           .end((error, res) => {
             done(error);
           });
-        console.log("logged in");
       });
     });
   });
