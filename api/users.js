@@ -106,15 +106,25 @@ function updateInfo(req, res) {
   const { _id, ...userData } = req.body;
   // Remove empty fields
   Object.keys(userData).forEach(key => (userData[key] === null) && delete userData[key]);
+  // Remove role field
+  (userData.role) && delete userData.role;
+  (userData.password) && delete userData.password;
 
-  User.findByIdAndUpdate(
-    _id,
-    { $set: userData },
-    { new: true },
-    (error, response) => {
-      res.json({ error, response });
-    }
-  );
+  const isCurrentUser = _id === req.user._id;
+  const isAdmin = req.user.role === "Admin";
+  if (isCurrentUser || isAdmin) {
+    User.findByIdAndUpdate(
+      _id,
+      { $set: userData },
+      { new: true },
+      (error, user) => {
+        if (error) res.status(500).json({ error });
+        return res.status(200).json({ user });
+      }
+    );
+  } else {
+    return res.status(403).json({ error: "You are not allowed to perform this action" });
+  }
 }
 
 function changeAccountStatus(req, res) {
