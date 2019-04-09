@@ -15,6 +15,14 @@ const passport = require("passport");
 const { User } = require("../models/user");
 const { sendEmail } = require("./mail");
 
+function updateActivity(user, next) {
+  User.findById(user._id, (err, account) => {
+    if (err) console.log("Activity update error", err);
+    account.lastEntered = new Date();
+    account.save(err => next());
+  });
+}
+
 function login(req, res, next) {
   passport.authenticate("local", (error, user, info) => {
     if (req.body.remember) {
@@ -37,6 +45,7 @@ function login(req, res, next) {
         console.log("Login error: ", error);
         return res.status(500).json({ error });
       }
+      updateActivity(user, next);
       return res.status(200).json({ user });
     });
   })(req, res, next);

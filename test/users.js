@@ -46,6 +46,7 @@ describe("Account tests", () => {
             email: "admin@test.com",
             username: "Admin",
           });
+        res.body.user.should.have.property("lastEntered");
         done();
       });
   });

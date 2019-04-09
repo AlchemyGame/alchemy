@@ -31,6 +31,10 @@ const schema = new Schema({
     type: Date,
     default: Date.now
   },
+  lastEntered: {
+    type: Date,
+    default: null
+  },
   isDisabled: {
     type: Boolean,
     default: false
