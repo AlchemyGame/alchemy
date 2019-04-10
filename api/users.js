@@ -155,8 +155,8 @@ function resetPassword(req, res) {
 }
 
 function updatePassword(req, res) {
-  const { _id, oldPassword, newPassword } = req.body;
-  User.findById(_id).exec((error, user) => {
+  const { oldPassword, newPassword } = req.body;
+  User.findById(req.user._id).exec((error, user) => {
     if (error) return res.status(500).json({ error });
     if (!user) return res.status(404).json({ error: "User not found" });
     if (!user.checkPassword(oldPassword)) return res.status(422).json({ error: `Incorrect password` });
