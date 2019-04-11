@@ -4,6 +4,9 @@ const crypto = require("crypto");
 const Schema = mongoose.Schema;
 const config = require("../config");
 
+const { Category } = require("../models/category");
+const { Element } = require("../models/element");
+
 const schema = new Schema({
   email: {
     type: String,
@@ -43,6 +46,19 @@ const schema = new Schema({
     type: Boolean,
     default: false
   }
+});
+
+schema.pre("save", function(next) {
+  // Add basic elements when creating new user
+  if (this.isNew) {
+    Category.findOne({ name: "Elements" }).lean().exec((error, basicCategory) => {
+      Element.find({ category: basicCategory }).lean().exec((error, basicElements) => {
+        basicElements = basicElements.map(el => this.elements.push(el._id));
+        this.save(err => next());
+      });
+    });
+  }
+  next();
 });
 
 schema.methods.encryptPassword = function(password) {

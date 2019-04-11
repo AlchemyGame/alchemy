@@ -88,6 +88,21 @@ describe("Account tests", () => {
             email: "admin@test.com",
             username: "Admin",
           });
+        res.body.user.should.have.property("created");
+        res.body.user.should.have.property("lastEntered");
+      done();
+    });
+  });
+  it("Returns current account opened elements", done => {
+    agent
+      .get("/api/account/elements")
+      .end((err, res) => {
+        if (err) return done(err);
+        res.should.have.status(200);
+        res.body.should
+          .be.an("object")
+          .have.property("elements")
+          .lengthOf(4);
       done();
     });
   });
