@@ -18,7 +18,7 @@ const sendEmail = (to, subject, html, res) => {
       return res.status(500).json({ error });
     }
     console.log({ info });
-    return res.status(201).json({ response: "Successful registration" });
+    return res.status(200).json({ response: "Data has been updated and email has been sent" });
   });
 };
 

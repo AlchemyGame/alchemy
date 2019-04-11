@@ -155,13 +155,15 @@ function resetPassword(req, res) {
   User.findOne({ email: req.body.email }).exec((error, user) => {
     if (error) return res.status(500).json({ error });
     if (!user) return res.status(404).json({ error: "User not found" });
-    user.password = Math.random().toString(36).slice(2);
+    const password = Math.random().toString(36).slice(2);
+    user.password = password;
     user.save(error => error && res.status(500).json({ error }));
 
     let html = "";
     html += `We have generated a new password for your account.<br/>`;
-    html += `Your new password: ${user.password}<br/><br/>`;
+    html += `Your new password: ${password}<br/><br/>`;
     html += `<a href="${req.protocol}://${req.get("host")}/login">Alchemy</a>`;
+    if (process.env.NODE_ENV === "test") return res.json({ html });
     sendEmail(req.body.email, "Your new password in Alchemy", html, res);
   });
 }
