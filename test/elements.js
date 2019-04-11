@@ -55,7 +55,7 @@ describe("Element tests", () => {
         done();
       });
   });
-  it("Add new element", async () => {
+  it("Add new element (for update and delete)", async () => {
     const category = await Category.findOne({ name: "Test Category" }).lean();
     const res = await agent
       .post("/api/element/add")
@@ -74,7 +74,7 @@ describe("Element tests", () => {
         category: category._id.toString()
       });
   });
-  it("Add another new element", async () => {
+  it("Add new element (to be opened by user)", async () => {
     const category = await Category.findOne({ name: "Test Category" }).lean();
     const res = await agent
       .post("/api/element/add")
@@ -89,6 +89,25 @@ describe("Element tests", () => {
       .have.property("response")
       .contain({
         name: "Non-Basic Element",
+        description: "Test",
+        category: category._id.toString()
+      });
+  });
+  it("Add new element (undiscovered)", async () => {
+    const category = await Category.findOne({ name: "Test Category" }).lean();
+    const res = await agent
+      .post("/api/element/add")
+      .send({
+        name: "Undicovered Element",
+        description: "Test",
+        category
+      });
+    res.should.have.status(201);
+    res.body.should
+      .be.an("object")
+      .have.property("response")
+      .contain({
+        name: "Undicovered Element",
         description: "Test",
         category: category._id.toString()
       });
