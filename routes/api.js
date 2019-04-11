@@ -10,7 +10,9 @@ const {
   updateInfo,
   changeAccountStatus,
   resetPassword,
-  updatePassword
+  updatePassword,
+  getUserElements,
+  addUserElement
 } = require("../api/users");
 
 const {
@@ -60,6 +62,8 @@ router.put("/account/update", isAuthenticated, updateInfo);
 router.put("/account/disable", isAuthenticated, isAdmin, changeAccountStatus);
 router.put("/account/password/reset", resetPassword);
 router.put("/account/password/update", isAuthenticated, updatePassword);
+router.get("/account/elements", isAuthenticated, getUserElements);
+router.put("/account/element/add", isAuthenticated, addUserElement);
 
 router.get("/elements", isAuthenticated, getElements);
 router.post("/element/add", isAuthenticated, isAdmin, addElement);

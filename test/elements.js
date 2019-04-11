@@ -4,6 +4,7 @@ const supertest = require("supertest");
 
 const { Category } = require("../models/category");
 const { Element } = require("../models/element");
+const { User } = require("../models/user");
 
 const server = require("../server");
 const agent = supertest.agent(server);
@@ -71,6 +72,40 @@ describe("Element tests", () => {
         name: "Test Element",
         description: "Test",
         category: category._id.toString()
+      });
+  });
+  it("Add another new element", async () => {
+    const category = await Category.findOne({ name: "Test Category" }).lean();
+    const res = await agent
+      .post("/api/element/add")
+      .send({
+        name: "Non-Basic Element",
+        description: "Test",
+        category
+      });
+    res.should.have.status(201);
+    res.body.should
+      .be.an("object")
+      .have.property("response")
+      .contain({
+        name: "Non-Basic Element",
+        description: "Test",
+        category: category._id.toString()
+      });
+  });
+  it("Adds new element to account", async() => {
+    const element = await Element.findOne({ name: "Non-Basic Element" }).lean();
+    const res = await agent
+      .put("/api/account/element/add")
+      .type("form")
+      .send({ elementId: element._id.toString() });
+    res.should.have.status(200);
+    res.body.should
+      .be.an("object")
+      .have.property("element")
+      .contain({
+        name: "Non-Basic Element",
+        description: "Test"
       });
   });
   it("Reject element creation (already exists)", async () => {

@@ -21,6 +21,10 @@ const schema = new Schema({
     enum: ["Admin", "User"],
     default: "User"
   },
+  elements: [{
+    type: Schema.Types.ObjectId,
+    ref: "Element"
+  }],
   hashedPassword: {
     type: String
   },

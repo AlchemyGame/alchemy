@@ -7,12 +7,15 @@ module.exports = {
   updateInfo,
   changeAccountStatus,
   resetPassword,
-  updatePassword
+  updatePassword,
+  getUserElements,
+  addUserElement
 };
 
 const passport = require("passport");
 
 const { User } = require("../models/user");
+const { Element } = require("../models/element");
 const { sendEmail } = require("./mail");
 
 function updateActivity(user, next) {
@@ -166,4 +169,31 @@ function updatePassword(req, res) {
       return res.status(200).json({ response: "Password has been successfully changed" });
     });
   });
+}
+
+function getUserElements(req, res) {
+  // Using current user _id
+  User.findById(req.user._id).lean().exec((error, user) => {
+    if (error) return res.status(500).json({ error });
+    Element.find({ _id: { $in: user.elements }}, "-__v").lean().exec((error, elements) => {
+      if (error) return res.status(500).json({ error });
+      res.status(200).json({ elements: elements });
+    });
+  });
+}
+
+function addUserElement(req, res) {
+  const { elementId } = req.body;
+  User.findByIdAndUpdate(
+    req.user._id,
+    { $addToSet: { elements: elementId } },
+    { new: true },
+    error => {
+      if (error) return res.status(500).json({ error });
+      Element.findById(elementId, "-__v").lean().exec((error, element) => {
+        if (error) return res.status(500).json({ error });
+        return res.status(200).json({ element });
+      })
+    }
+  );
 }
