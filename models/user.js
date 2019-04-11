@@ -81,10 +81,16 @@ schema.methods.checkPassword = function(password) {
   return this.encryptPassword(password) === this.hashedPassword;
 };
 
+function validateEmail(email) {
+  const re = /\S+@\S+\.\S+/;
+  return re.test(email);
+}
+
 schema.statics.authorize = function(email, password, done) {
   const User = this;
+  const query = validateEmail(email) ? { email } : { username: email };
 
-  User.findOne({ email }, (err, user) => {
+  User.findOne(query, (err, user) => {
     if (err) console.log({ err });
     if (user) {
       if (user.checkPassword(password)) {

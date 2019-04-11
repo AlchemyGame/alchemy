@@ -73,6 +73,29 @@ describe("Account tests", () => {
         done();
       });
   });
+  it("Returns admin account data, login with username", done => {
+    agent
+      .post("/api/login")
+      .type("form")
+      .send({
+        email: "Admin",
+        password: "1"
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+        res.should.have.status(200);
+        res.body.should
+          .be.an("object")
+          .have.property("user")
+          .contain({
+            role: "Admin",
+            isDisabled: false,
+            email: "admin@test.com",
+            username: "Admin",
+          });
+        done();
+      });
+  });
   it("Returns current account data", done => {
     agent
       .get("/api/login")
