@@ -48,6 +48,9 @@ function login(req, res, next) {
         console.log("Login error: ", error);
         return res.status(500).json({ error });
       }
+      delete user.hashedPassword;
+      delete user.salt;
+      delete user.elements;
       updateActivity(user, next);
       return res.status(200).json({ user });
     });
@@ -57,6 +60,10 @@ function login(req, res, next) {
 function checkSession(req, res) {
   if (!req.user) return res.status(401).json({ error: "User session not found" });
   if (req.user.isDisabled) return res.status(404).json({ error: "This user is disabled" });
+  req.user = req.user.toObject();
+  delete req.user.hashedPassword;
+  delete req.user.salt;
+  delete req.user.elements;
   return res.status(200).json({ user: req.user });
 }
 
@@ -82,6 +89,7 @@ function getUsersList(req, res) {
   User.find({ ...statusQuery, ...roleQuery }, {
     salt: 0,
     hashedPassword: 0,
+    elements: 0,
     __v: 0
   }).exec((error, response) => res.json({ error, response }));
 }
@@ -112,6 +120,7 @@ function updateInfo(req, res) {
   // Remove role field
   (userData.role) && delete userData.role;
   (userData.password) && delete userData.password;
+  (userData.elements) && delete userData.elements;
 
   const isCurrentUser = _id === req.user._id;
   const isAdmin = req.user.role === "Admin";
@@ -121,7 +130,7 @@ function updateInfo(req, res) {
       { $set: userData },
       { new: true },
       (error, user) => {
-        if (error) res.status(500).json({ error });
+        if (error) return res.status(500).json({ error });
         return res.status(200).json({ user });
       }
     );
@@ -162,7 +171,7 @@ function updatePassword(req, res) {
   User.findById(req.user._id).exec((error, user) => {
     if (error) return res.status(500).json({ error });
     if (!user) return res.status(404).json({ error: "User not found" });
-    if (!user.checkPassword(oldPassword)) return res.status(422).json({ error: `Incorrect password` });
+    if (!user.checkPassword(oldPassword)) return res.status(422).json({ error: "Incorrect password" });
     user.password = newPassword;
     user.save(error => {
       if (error) return res.status(500).json({ error });
