@@ -41,7 +41,7 @@ async function addElement(req, res) {
   }
 
   Element.findOne({name}, (error, element) => {
-    if (error) return res.status(500).json({error});
+    if (error) return res.status(500).json({ error });
     if (!element) {
       const newElement = new Element({ name, category, description });
       newElement.save(error => {
@@ -72,8 +72,16 @@ function updateElement(req, res) {
 }
 
 async function deleteElement(req, res) {
-  const {elementId} = req.body;
+  const { elementId } = req.body;
+  // Check if element is one of the basic elements
+  const basicCategory = await Category.findOne({ name: "Elements" }).lean();
+  const element = await Element.findById(elementId).lean();
+  if (!element) return res.status(404).json({ error: "Element doesn't exist" });
+  if (element.category.toString() === basicCategory._id.toString()) {
+    return res.status(400).json({ error: "This element is one of four basic elements" });
+  }
 
+  // Check if element is used in any recipes
   const pipeline = [
     { $project: {
       _id: 0,
@@ -91,9 +99,10 @@ async function deleteElement(req, res) {
   list = [...list];
 
   if (list.includes(elementId)) return res.status(400).json({
-    error: `This element is used in the recipe. You have to change the recipe before deleting this element`
+    error: "This element is used in the recipe. You have to change the recipe before deleting this element"
   });
 
+  // After all checks - delete the element
   Element.findByIdAndRemove(elementId, (error, response) => {
     if (error) return res.status(500).json({ error });
     return res.status(200).json({ response });

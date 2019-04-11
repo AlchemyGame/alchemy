@@ -55,7 +55,7 @@ describe("Element tests", () => {
       });
   });
   it("Add new element", async () => {
-    const category = await Category.findOne({ name: "Elements" }).lean();
+    const category = await Category.findOne({ name: "Test Category" }).lean();
     const res = await agent
       .post("/api/element/add")
       .send({
@@ -74,7 +74,7 @@ describe("Element tests", () => {
       });
   });
   it("Reject element creation (already exists)", async () => {
-    const category = await Category.findOne({ name: "Elements" }).lean();
+    const category = await Category.findOne({ name: "Test Category" }).lean();
     const res = await agent
       .post("/api/element/add")
       .send({
@@ -103,7 +103,7 @@ describe("Element tests", () => {
   });
   it("Update existing element", async () => {
     const element = await Element.findOne({ name: "Test Element" }).lean();
-    const category = await Category.findOne({ name: "Elements" }).lean();
+    const category = await Category.findOne({ name: "Test Category" }).lean();
     const res = await agent
       .put("/api/element/update")
       .send({
@@ -131,5 +131,15 @@ describe("Element tests", () => {
       .be.an("object")
       .have.property("response")
       .have.property("name").equal("Updated element name");
+  });
+  it("Rejects to delete basic element", async () => {
+    const element = await Element.findOne({ name: "Water" }).lean();
+    const res = await agent
+      .delete("/api/element/delete")
+      .send({ elementId: element });
+    res.should.have.status(400);
+    res.body.should
+      .be.an("object")
+      .have.property("error").equal("This element is one of four basic elements");
   });
 });

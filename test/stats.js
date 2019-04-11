@@ -35,7 +35,7 @@ describe("Statistics tests", () => {
             activeUsersCount: 1,
             bannedUsersCount: 1,
             // discoveredElementsCount: "discoveredElements"
-            elementsCount: 4
+            elementsCount: 5
           });
         done();
       });

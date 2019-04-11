@@ -108,4 +108,18 @@ describe("Category tests", () => {
       .have.property("response")
       .have.property("name").equal("Updated category name");
   });
+  it("Add new category", done => {
+    agent
+      .post("/api/category/add")
+      .send({ name: "Test Category" })
+      .end((err, res) => {
+        if (err) return done(err);
+        res.should.have.status(201);
+        res.body.should
+          .be.an("object")
+          .have.property("response")
+          .have.property("name").equal("Test Category");
+        done();
+      });
+  });
 });
