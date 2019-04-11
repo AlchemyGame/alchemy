@@ -4,6 +4,8 @@ let overwriteConfig = require("./config.dev");
 
 if (process.env.NODE_ENV === "test") overwriteConfig = require("./config.test");
 
+if (process.env.NODE_ENV === "production") overwriteConfig = require("./config.prod");
+
 module.exports = {
   appPort: "7540",
   mongoUrl: "mongodb://localhost/alchemy",
