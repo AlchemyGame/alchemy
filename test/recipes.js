@@ -13,7 +13,7 @@ chai.should();
 chai.use(chaiHttp);
 
 describe("Recipe tests", () => {
-  before(async () => {
+  before(done => {
     Recipe.deleteMany({}, err => err && console.error(err));
     agent
       .post("/api/login")
@@ -22,7 +22,9 @@ describe("Recipe tests", () => {
         email: "admin@test.com",
         password: "1"
       })
-      .end(error => error && console.error(error));
+      .end((error, res) => {
+        done(error);
+      });
   });
 
   it("Add new recipe", async () => {
