@@ -17,7 +17,7 @@ const {
 
 const {
   getStats
-} = require ("../api/stats");
+} = require("../api/stats");
 
 const {
   getElements,

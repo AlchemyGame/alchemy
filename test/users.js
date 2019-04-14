@@ -113,8 +113,8 @@ describe("Account tests", () => {
           });
         res.body.user.should.have.property("created");
         res.body.user.should.have.property("lastEntered");
-      done();
-    });
+        done();
+      });
   });
   it("Returns current account opened elements", done => {
     agent
@@ -126,8 +126,8 @@ describe("Account tests", () => {
           .be.an("object")
           .have.property("elements")
           .lengthOf(4);
-      done();
-    });
+        done();
+      });
   });
   it("Creates new account", done => {
     agent
@@ -146,7 +146,7 @@ describe("Account tests", () => {
           .have.property("html")
           .match(/(?:You are registered in Alchemy)/);
         done();
-    });
+      });
   });
   it("Doesn't register account with same email", done => {
     agent
@@ -156,16 +156,16 @@ describe("Account tests", () => {
         email: "NeW@TeSt.CoM",
         username: "testAccount",
         role: "User"
-    })
-    .end((err, res) => {
-      if (err) return done(err);
-      res.should.have.status(409);
-      res.body.should
-        .be.an("object")
-        .have.property("error")
-        .equal("Email already exists");
-      done();
-    });
+      })
+      .end((err, res) => {
+        if (err) return done(err);
+        res.should.have.status(409);
+        res.body.should
+          .be.an("object")
+          .have.property("error")
+          .equal("Email already exists");
+        done();
+      });
   });
   it("Returns all accounts", done => {
     agent

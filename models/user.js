@@ -52,9 +52,14 @@ schema.pre("save", function(next) {
   // Add basic elements when creating new user
   if (this.isNew) {
     Category.findOne({ name: "Elements" }).lean().exec((error, basicCategory) => {
+      if (error) console.log("pre save hook, category error", error);
       Element.find({ category: basicCategory }).lean().exec((error, basicElements) => {
+        if (error) console.log("pre save hook, basic elements error", error);
         basicElements = basicElements.map(el => this.elements.push(el._id));
-        this.save(err => next());
+        this.save(err => {
+          if (err) console.log("pre save hook, save error", err);
+          next();
+        });
       });
     });
   }

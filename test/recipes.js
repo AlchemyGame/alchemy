@@ -22,7 +22,7 @@ describe("Recipe tests", () => {
         email: "admin@test.com",
         password: "1"
       })
-      .end(error => error && console.error(err));
+      .end(error => error && console.error(error));
   });
 
   it("Add new recipe", async () => {

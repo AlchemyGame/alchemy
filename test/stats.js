@@ -11,15 +11,15 @@ chai.use(chaiHttp);
 describe("Statistics tests", () => {
   before(done => {
     agent
-    .post("/api/login")
-    .type("form")
-    .send({
-      email: "admin@test.com",
-      password: "1"
-    })
-    .end((error, res) => {
-      done(error);
-    });
+      .post("/api/login")
+      .type("form")
+      .send({
+        email: "admin@test.com",
+        password: "1"
+      })
+      .end((error, res) => {
+        done(error);
+      });
   });
 
   it("Returns statistics", done => {

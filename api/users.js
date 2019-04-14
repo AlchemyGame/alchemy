@@ -22,7 +22,10 @@ function updateActivity(user, next) {
   User.findById(user._id, (err, account) => {
     if (err) console.log("Activity update error", err);
     account.lastEntered = new Date();
-    account.save(err => next());
+    account.save(err => {
+      if (err) console.log("Activity update error", err);
+      next();
+    });
   });
 }
 
@@ -118,9 +121,9 @@ function updateInfo(req, res) {
   // Remove empty fields
   Object.keys(userData).forEach(key => (userData[key] === null) && delete userData[key]);
   // Remove role field
-  (userData.role) && delete userData.role;
-  (userData.password) && delete userData.password;
-  (userData.elements) && delete userData.elements;
+  if (userData.role) delete userData.role;
+  if (userData.password) delete userData.password;
+  if (userData.elements) delete userData.elements;
 
   const isCurrentUser = _id === req.user._id;
   const isAdmin = req.user.role === "Admin";
@@ -146,7 +149,7 @@ function changeAccountStatus(req, res) {
   },
   { $set: { isDisabled: !this.isDisabled }},
   (error, users) => {
-    if (error) return res.status(500).json({ error })
+    if (error) return res.status(500).json({ error });
     res.json({ response: users });
   });
 }
@@ -188,7 +191,7 @@ function getUserElements(req, res) {
     if (error) return res.status(500).json({ error });
     Element.find({ _id: { $in: user.elements }}, "-__v").lean().exec((error, elements) => {
       if (error) return res.status(500).json({ error });
-      res.status(200).json({ elements: elements });
+      res.status(200).json({ elements });
     });
   });
 }
@@ -204,7 +207,7 @@ function addUserElement(req, res) {
       Element.findById(elementId, "-__v").lean().exec((error, element) => {
         if (error) return res.status(500).json({ error });
         return res.status(200).json({ element });
-      })
+      });
     }
   );
 }

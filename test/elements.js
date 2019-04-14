@@ -4,7 +4,6 @@ const supertest = require("supertest");
 
 const { Category } = require("../models/category");
 const { Element } = require("../models/element");
-const { User } = require("../models/user");
 
 const server = require("../server");
 const agent = supertest.agent(server);
@@ -112,7 +111,7 @@ describe("Element tests", () => {
         category: category._id.toString()
       });
   });
-  it("Adds new element to account", async() => {
+  it("Adds new element to account", async () => {
     const element = await Element.findOne({ name: "Non-Basic Element" }).lean();
     const res = await agent
       .put("/api/account/element/add")

@@ -20,7 +20,7 @@ async function getStats(req, res, next) {
   const elementsCount = await Element.estimatedDocumentCount();
 
   const users = await User.find({}).lean();
-  let discoveredElementsSet = new Set();
+  const discoveredElementsSet = new Set();
   users.map(user => {
     user.elements.map(el => discoveredElementsSet.add(el.toString()));
   });
