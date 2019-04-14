@@ -61,8 +61,8 @@ function login(req, res, next) {
 }
 
 function checkSession(req, res) {
-  if (!req.user) return res.status(401).json({ error: "User session not found" });
-  if (req.user.isDisabled) return res.status(404).json({ error: "This user is disabled" });
+  if (!req.user) return res.status(200).json({ error: "User session not found" });
+  if (req.user.isDisabled) return res.status(200).json({ error: "This user is disabled" });
   req.user = req.user.toObject();
   delete req.user.hashedPassword;
   delete req.user.salt;
