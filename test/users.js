@@ -323,7 +323,7 @@ describe("Account tests", () => {
       .get("/api/login")
       .end((err, res) => {
         if (err) return done(err);
-        res.should.have.status(401);
+        res.should.have.status(200);
         res.body.should
           .be.an("object")
           .have.property("error")
