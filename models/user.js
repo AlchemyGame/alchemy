@@ -135,7 +135,7 @@ const User = exports.User = mongoose.model("User", schema);
 
 if (process.env.NODE_ENV === "test") return;
 
-User.findOne({}, (err, usr) => {
+User.findOne({ username: "Admin" }, (err, usr) => {
   if (err) console.log({err});
   if (!usr) {
     User.createNew({
