@@ -1,4 +1,4 @@
 module.exports = {
-  mongoUrl: "mongodb://localhost/alchemy-tests",
+  mongoUrl: "mongodb://localhost/test_alchemy",
   appPort: "7541"
 };
