@@ -1,4 +1,5 @@
 # Alchemy
+[![Travis (.org)](https://img.shields.io/travis/AlchemyGame/alchemy.svg)](https://travis-ci.org/AlchemyGame/alchemy)
 [![dep](https://img.shields.io/david/AlchemyGame/alchemy.svg?style=flat)](https://david-dm.org/AlchemyGame/alchemy)
 [![devDep](https://img.shields.io/david/dev/AlchemyGame/alchemy.svg?label=devDependencies)](https://david-dm.org/AlchemyGame/alchemy?type=dev)
 
