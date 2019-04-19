@@ -12,11 +12,6 @@ chai.use(chaiHttp);
 
 describe("Category tests", () => {
   before(done => {
-    Category.deleteMany({}, err => err && done(err));
-
-    const newCategory = new Category({ name: "Elements" });
-    newCategory.save(error => error && console.error(error));
-
     agent
       .post("/api/login")
       .type("form")

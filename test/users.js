@@ -3,6 +3,8 @@ const chaiHttp = require("chai-http");
 const supertest = require("supertest");
 
 const { User } = require("../models/user");
+const { Category } = require("../models/category");
+const { Element } = require("../models/element");
 
 const server = require("../server");
 const agent = supertest.agent(server);
@@ -12,16 +14,36 @@ chai.use(chaiHttp);
 
 describe("Account tests", () => {
   before(done => {
-    User.deleteMany({}, err => {
-      if (err) done(err);
-      const newUser = new User({
-        email: "admin@test.com",
-        username: "Admin",
-        role: "Admin",
-        password: "1"
-      });
-      newUser.save(error => {
-        done(error);
+    Category.deleteMany({}, error => {
+      if (error) done(error);
+      const newCategory = new Category({ name: "Elements" });
+      newCategory.save(error => {
+        if (error) done(error);
+        Element.deleteMany({}, err => err && console.error(err));
+        Category.findOne({ name: "Elements" }).lean().exec((error, category) => {
+          if (error) return done(error);
+
+          const elements = [
+            { name: "Air", category },
+            { name: "Earth", category },
+            { name: "Fire", category },
+            { name: "Water", category }
+          ];
+          Element.insertMany(elements, error => {
+            if (error) return done(error);
+            User.deleteMany({}, err => {
+              if (err) done(err);
+              const newUser = new User({
+                email: "admin@test.com",
+                username: "Admin",
+                role: "Admin",
+                password: "1"
+              });
+              newUser.save();
+              done();
+            });
+          });
+        });
       });
     });
   });

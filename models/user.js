@@ -56,9 +56,8 @@ schema.pre("save", function(next) {
       Element.find({ category: basicCategory }).lean().exec((error, basicElements) => {
         if (error) console.log("pre save hook, basic elements error", error);
         basicElements = basicElements.map(el => this.elements.push(el._id));
-        this.save(err => {
-          if (err) console.log("pre save hook, save error", err);
-          next();
+        this.updateOne(this, error => {
+          if (error) console.log("pre save hook, update error", error);
         });
       });
     });
