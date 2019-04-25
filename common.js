@@ -9,6 +9,7 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const session = require("express-session");
 const bodyParser = require("body-parser");
+const compression = require("compression");
 
 const config = require("./config");
 const { User } = require("./models/user");
@@ -58,4 +59,5 @@ function addExpressMiddleware(app) {
   app.use(session(config.session));
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(compression());
 }
