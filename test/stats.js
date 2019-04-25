@@ -22,7 +22,7 @@ describe("Statistics tests", () => {
       });
   });
 
-  it("Returns statistics", done => {
+  it("Return statistics", done => {
     agent
       .get("/api/stats")
       .end((err, res) => {

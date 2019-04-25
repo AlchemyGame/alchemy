@@ -82,7 +82,7 @@ describe("Element tests", () => {
     const res = await agent
       .post("/api/element/add")
       .send({
-        name: "Undicovered Element",
+        name: "Undiscovered Element",
         description: "Test",
         category
       });
@@ -91,7 +91,7 @@ describe("Element tests", () => {
       .be.an("object")
       .have.property("response")
       .contain({
-        name: "Undicovered Element",
+        name: "Undiscovered Element",
         description: "Test",
         category: category._id.toString()
       });
@@ -170,7 +170,7 @@ describe("Element tests", () => {
       .have.property("response")
       .have.property("name").equal("Updated element name");
   });
-  it("Rejects to delete basic element", async () => {
+  it("Reject to delete basic element", async () => {
     const element = await Element.findOne({ name: "Water" }).lean();
     const res = await agent
       .delete("/api/element/delete")

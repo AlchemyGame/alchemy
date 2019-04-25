@@ -48,7 +48,7 @@ describe("Account tests", () => {
     });
   });
 
-  it("Returns admin account data", done => {
+  it("Return admin account data", done => {
     agent
       .post("/api/login")
       .type("form")
@@ -72,7 +72,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Returns admin account data, case insensitive input", done => {
+  it("Return admin account data, case insensitive input", done => {
     agent
       .post("/api/login")
       .type("form")
@@ -95,7 +95,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Returns admin account data, login with username", done => {
+  it("Return admin account data, login with username", done => {
     agent
       .post("/api/login")
       .type("form")
@@ -118,7 +118,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Returns current account data", done => {
+  it("Return current account data", done => {
     agent
       .get("/api/login")
       .end((err, res) => {
@@ -138,7 +138,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Returns current account opened elements", done => {
+  it("Return current account opened elements", done => {
     agent
       .get("/api/account/elements")
       .end((err, res) => {
@@ -151,7 +151,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Creates new account", done => {
+  it("Create new account", done => {
     agent
       .post("/api/account/add")
       .type("form")
@@ -170,7 +170,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Doesn't register account with same email", done => {
+  it("Reject to register account with already registered email", done => {
     agent
       .post("/api/account/add")
       .type("form")
@@ -189,7 +189,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Returns all accounts", done => {
+  it("Return all accounts", done => {
     agent
       .get("/api/users")
       .end((err, res) => {
@@ -203,7 +203,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Returns only admins", done => {
+  it("Return admin accounts", done => {
     agent
       .get("/api/users")
       .query({ role: "admin"})
@@ -218,7 +218,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Returns only users", done => {
+  it("Return user accounts", done => {
     agent
       .get("/api/users")
       .query({ role: "user"})
@@ -233,7 +233,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Disables new@test.com account and returns it's data", done => {
+  it("Disable account and return it's data", done => {
     User.findOne({ email: "new@test.com" }, (err, user) => {
       if (err) return done(err);
       agent
@@ -252,7 +252,7 @@ describe("Account tests", () => {
         });
     });
   });
-  it("Returns 0 users", done => {
+  it("Return 0 users", done => {
     agent
       .get("/api/users")
       .query({ role: "user"})
@@ -267,7 +267,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Logouts from current account", done => {
+  it("Logout from current account", done => {
     agent
       .get("/api/logout")
       .end((err, res) => {
@@ -280,7 +280,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Fails to login with wrong credentials", done => {
+  it("Reject to login with wrong credentials", done => {
     agent
       .post("/api/login")
       .send({
@@ -297,7 +297,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Fails to login with non-existing account", done => {
+  it("Reject to login with non-existing account", done => {
     agent
       .post("/api/login")
       .send({
@@ -314,7 +314,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Fails to login with disabled account", done => {
+  it("Reject to login with disabled account", done => {
     // Change account password to login with correct credentials
     User.findOne({ email: "new@test.com" }, (err, user) => {
       if (err) return done(err);
@@ -340,7 +340,7 @@ describe("Account tests", () => {
         });
     });
   });
-  it("Tries to check session after logout", done => {
+  it("Check session after logout", done => {
     agent
       .get("/api/login")
       .end((err, res) => {
