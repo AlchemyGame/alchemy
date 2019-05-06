@@ -3,6 +3,7 @@ const config = require("../config");
 const transporter = nodemailer.createTransport(config.nodemailer);
 
 const sendEmail = (to, subject, html, res, userData = null) => {
+  if (process.env.NODE_ENV === "test") return res.json({ html });
   const data = {
     from: "Alchemy <noreply@alchemy.game>",
     to,

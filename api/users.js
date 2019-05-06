@@ -111,7 +111,6 @@ function createAccount(req, res) {
     html += `Email: ${userData.email.toLowerCase()}<br/>`;
     html += `Password: ${userData.password}<br/><br/>`;
     html += `<a href="${req.protocol}://${req.get("host")}/login">Alchemy</a>`;
-    if (process.env.NODE_ENV === "test") return res.json({ html });
     sendEmail(req.body.email, "Account registration", html, res, user);
   });
 }
@@ -166,7 +165,6 @@ function resetPassword(req, res) {
     html += `We have generated a new password for your account.<br/>`;
     html += `Your new password: ${password}<br/><br/>`;
     html += `<a href="${req.protocol}://${req.get("host")}/login">Alchemy</a>`;
-    if (process.env.NODE_ENV === "test") return res.json({ html });
     sendEmail(req.body.email, "Your new password in Alchemy", html, res);
   });
 }
