@@ -48,23 +48,6 @@ const schema = new Schema({
   }
 });
 
-schema.pre("save", function(next) {
-  // Add basic elements when creating new user
-  if (this.isNew) {
-    Category.findOne({ name: "Elements" }).lean().exec((error, basicCategory) => {
-      if (error) console.log("pre save hook, category error", error);
-      Element.find({ category: basicCategory }).lean().exec((error, basicElements) => {
-        if (error) console.log("pre save hook, basic elements error", error);
-        basicElements = basicElements.map(el => this.elements.push(el._id));
-        this.updateOne(this, error => {
-          if (error) console.log("pre save hook, update error", error);
-        });
-      });
-    });
-  }
-  next();
-});
-
 schema.methods.encryptPassword = function(password) {
   return crypto
     .createHmac("sha1", this.salt)
@@ -111,40 +94,25 @@ schema.statics.authorize = function(email, password, done) {
 schema.statics.createNew = function(obj, done) {
   const User = this;
 
-  User.findOne({ email: obj.email }, (err, user) => {
+  User.findOne({ email: obj.email }, async (err, user) => {
     if (err) console.log({ err });
-    if (user) {
-      done("Email already exists");
-    } else {
-      user = new User(obj);
-      user.save(err => {
-        if (err) return done(err);
-        if (user) {
-          user = user.toObject();
-          delete user.hashedPassword;
-          delete user.salt;
-        }
-        done(null, user);
-      });
-    }
+    if (user) return done("Email already exists");
+
+    user = new User(obj);
+    const basicCategory = await Category.findOne({ name: "Elements" }).lean();
+    const basicElements = await Element.find({ category: basicCategory }).lean();
+    user.elements = basicElements.map(element => element._id);
+
+    user.save(err => {
+      if (err) return done(err);
+      if (user) {
+        user = user.toObject();
+        delete user.hashedPassword;
+        delete user.salt;
+      }
+      done(null, user);
+    });
   });
 };
 
-const User = exports.User = mongoose.model("User", schema);
-
-if (process.env.NODE_ENV === "test") return;
-
-User.findOne({ username: "Admin" }, (err, usr) => {
-  if (err) console.log({err});
-  if (!usr) {
-    User.createNew({
-      email: "admin@test.com",
-      username: "Admin",
-      role: "Admin",
-      password: "1"
-    }, (error, user) => {
-      if (error) console.error({ error });
-      console.log({ user });
-    });
-  }
-});
+exports.User = mongoose.model("User", schema);

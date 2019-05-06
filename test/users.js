@@ -33,14 +33,14 @@ describe("Account tests", () => {
             if (error) return done(error);
             User.deleteMany({}, err => {
               if (err) done(err);
-              const newUser = new User({
+              User.createNew({
                 email: "admin@test.com",
                 username: "Admin",
                 role: "Admin",
                 password: "1"
+              }, error => {
+                done(error);
               });
-              newUser.save();
-              done();
             });
           });
         });

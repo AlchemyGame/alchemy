@@ -22,7 +22,7 @@ describe("Recipe tests", () => {
         email: "admin@test.com",
         password: "1"
       })
-      .end((error, res) => {
+      .end(error => {
         done(error);
       });
   });
