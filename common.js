@@ -13,6 +13,7 @@ const compression = require("compression");
 
 const config = require("./config");
 const { User } = require("./models/user");
+const { initCollections } = require("./models/init");
 
 const multer = require("multer");
 const upload = multer();
@@ -29,8 +30,8 @@ config.session.store = new MongoStore({
   mongooseConnection: mongoose.connection,
   ttl: 14 * 24 * 60 * 60
 });
-
 mongoose.connection.on("error", console.error.bind(console, "MongoDB connection error:"));
+initCollections();
 
 passport.use(
   new LocalStrategy({
