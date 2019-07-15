@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["Dashboard"],{"77ca":function(a,n,t){"use strict";t.r(n);var o=function(){var a=this,n=a.$createElement,t=a._self._c||n;return t("b-container",[t("b-row",[t("b-col",{attrs:{cols:"12"}},[t("div",{staticClass:"jumbotron"},[t("h1",[a._v("Dashboard")])])])],1)],1)},s=[],r={name:"Dashboard"},e=r,c=t("2877"),l=Object(c["a"])(e,o,s,!1,null,null,null);n["default"]=l.exports}}]);
-//# sourceMappingURL=Dashboard.6fa0a796.js.map
