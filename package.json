@@ -18,9 +18,12 @@
   },
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server.js",
     "database": "mongod --bind_ip 127.0.0.1 --port 27017",
-    "test": "mocha tests.js --timeout 5000 --exit"
+    "server": "nodemon server.js",
+    "test": "mocha tests.js --timeout 5000 --exit",
+    "dump": "mongodump --db alchemy",
+    "drop": "mongo alchemy --eval 'printjson(db.dropDatabase())'",
+    "restore": "mongorestore --db alchemy ./dump/alchemy/"
   },
   "dependencies": {
     "body-parser": "^1.19.0",

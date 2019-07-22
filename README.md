@@ -13,3 +13,13 @@
 1. Start database `mongod`.
 1. Start server `node server.js`.
 1. Open http://localhost:7540 to view the frontend.
+
+## Available tasks
+_You can use `yarn` instead of `npm run`_
+* `npm run database`: start database
+* `npm run start`: start server
+* `npm run server`: start server with nodemon (automatically restarts server on code change)
+* `npm run test`: run tests
+* `npm run dump`: export Alchemy collections
+* `npm run drop`: clear Alchemy database
+* `npm run restore`: import Alchemy collections
