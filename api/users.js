@@ -111,7 +111,10 @@ function getUsersList(req, res) {
     hashedPassword: 0,
     elements: 0,
     __v: 0
-  }).exec((error, response) => res.json({ error, response }));
+  }).lean().exec((error, response) => {
+    if (error) return res.status(500).json({ error });
+    res.json({ response });
+  });
 }
 
 function createAccount(req, res) {
