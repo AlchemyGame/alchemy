@@ -5,12 +5,13 @@ const {
   login,
   checkSession,
   logout,
+  resetPassword,
   getUsersList,
   createAccount,
-  updateInfo,
+  changeAccountInfo,
   changeAccountStatus,
-  resetPassword,
-  updatePassword,
+  changeAccountRole,
+  changeAccountPassword,
   getUserElements,
   addUserElement
 } = require("../api/users");
@@ -53,15 +54,16 @@ function isAdmin(req, res, next) {
 router.post("/login", login);
 router.get("/login", checkSession);
 router.get("/logout", isAuthenticated, logout);
+router.put("/account/password/reset", resetPassword);
 
 router.get("/stats", isAuthenticated, getStats);
 
 router.get("/users", isAuthenticated, isAdmin, getUsersList);
 router.post("/account/add", createAccount);
-router.put("/account/update", isAuthenticated, updateInfo);
+router.put("/account/update", isAuthenticated, changeAccountInfo);
 router.put("/account/disable", isAuthenticated, isAdmin, changeAccountStatus);
-router.put("/account/password/reset", resetPassword);
-router.put("/account/password/update", isAuthenticated, updatePassword);
+router.put("/account/role/update", isAuthenticated, isAdmin, changeAccountRole);
+router.put("/account/password/update", isAuthenticated, changeAccountPassword);
 router.get("/account/elements", isAuthenticated, getUserElements);
 router.put("/account/element/add", isAuthenticated, addUserElement);
 

@@ -233,21 +233,73 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Disable account and return it's data", done => {
+  it("Promote account to admin", done => {
     User.findOne({ email: "new@test.com" }, (err, user) => {
       if (err) return done(err);
       agent
-        .put("/api/account/disable")
+        .put("/api/account/role/update")
         .send({
-          accounts: [user._id]
+          _id: user._id,
+          role: "Admin"
         })
         .end((err, res) => {
           if (err) return done(err);
           res.should.have.status(200);
           res.body.should
             .be.an("object")
-            .have.property("response")
-            .deep.equal({ n: 1, nModified: 1, ok: 1 });
+            .have.property("user")
+            .contain({
+              email: "new@test.com",
+              username: "testAccount",
+              role: "Admin"
+            });
+          done();
+        });
+    });
+  });
+  it("Demote account to user", done => {
+    User.findOne({ email: "new@test.com" }, (err, user) => {
+      if (err) return done(err);
+      agent
+        .put("/api/account/role/update")
+        .send({
+          _id: user._id,
+          role: "User"
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          res.should.have.status(200);
+          res.body.should
+            .be.an("object")
+            .have.property("user")
+            .contain({
+              email: "new@test.com",
+              username: "testAccount",
+              role: "User"
+            });
+          done();
+        });
+    });
+  });
+  it("Disable account and return it's data", done => {
+    User.findOne({ email: "new@test.com" }, (err, user) => {
+      if (err) return done(err);
+      agent
+        .put("/api/account/disable")
+        .send({
+          _id: user._id
+        })
+        .end((err, res) => {
+          if (err) return done(err);
+          res.should.have.status(200);
+          res.body.should
+            .be.an("object")
+            .have.property("user")
+            .contain({
+              email: "new@test.com",
+              username: "testAccount",
+              isDisabled: true
+            });
           done();
         });
     });

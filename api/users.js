@@ -2,12 +2,13 @@ module.exports = {
   login,
   checkSession,
   logout,
+  resetPassword,
   getUsersList,
   createAccount,
-  updateInfo,
+  changeAccountInfo,
   changeAccountStatus,
-  resetPassword,
-  updatePassword,
+  changeAccountRole,
+  changeAccountPassword,
   getUserElements,
   addUserElement
 };
@@ -75,6 +76,22 @@ function logout(req, res) {
   res.status(200).json({ response: "Logged out" });
 }
 
+function resetPassword(req, res) {
+  User.findOne({ email: req.body.email }).exec((error, user) => {
+    if (error) return res.status(500).json({ error });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    const password = Math.random().toString(36).slice(2);
+    user.password = password;
+    user.save(error => error && res.status(500).json({ error }));
+
+    let html = "";
+    html += `We have generated a new password for your account.<br/>`;
+    html += `Your new password: ${password}<br/><br/>`;
+    html += `<a href="${req.protocol}://${req.get("host")}/login">Alchemy</a>`;
+    sendEmail(req.body.email, "Your new password in Alchemy", html, res);
+  });
+}
+
 function getUsersList(req, res) {
   let statusQuery = {};
   if (req.query.status === "active") {
@@ -115,7 +132,7 @@ function createAccount(req, res) {
   });
 }
 
-function updateInfo(req, res) {
+function changeAccountInfo(req, res) {
   const { _id, ...userData } = req.body;
   // Remove empty fields
   Object.keys(userData).forEach(key => (userData[key] === null) && delete userData[key]);
@@ -142,34 +159,34 @@ function updateInfo(req, res) {
 }
 
 function changeAccountStatus(req, res) {
-  User.updateMany({
-    _id: { $in: req.body.accounts },
-    role: { $ne: "Admin" }
-  },
-  { $set: { isDisabled: !this.isDisabled }},
-  (error, users) => {
+  const { _id } = req.body;
+  User.findById(_id).exec((error, user) => {
     if (error) return res.status(500).json({ error });
-    res.json({ response: users });
+    if (user.role === "Admin") return res.status(403).json({ error: "You are not allowed to disable administrator accounts" });
+
+    user.isDisabled = !user.isDisabled;
+    user.save(error => {
+      if (error) return res.status(500).json({ error });
+      return res.status(200).json({ user });
+    });
   });
 }
 
-function resetPassword(req, res) {
-  User.findOne({ email: req.body.email }).exec((error, user) => {
+function changeAccountRole(req, res) {
+  const { _id, role } = req.body;
+  User.findById(_id).exec((error, user) => {
     if (error) return res.status(500).json({ error });
-    if (!user) return res.status(404).json({ error: "User not found" });
-    const password = Math.random().toString(36).slice(2);
-    user.password = password;
-    user.save(error => error && res.status(500).json({ error }));
+    if (user.isDisabled) return res.status(400).json({ error: "You can not change status of disabled accounts" });
 
-    let html = "";
-    html += `We have generated a new password for your account.<br/>`;
-    html += `Your new password: ${password}<br/><br/>`;
-    html += `<a href="${req.protocol}://${req.get("host")}/login">Alchemy</a>`;
-    sendEmail(req.body.email, "Your new password in Alchemy", html, res);
+    user.role = role;
+    user.save(error => {
+      if (error) return res.status(500).json({ error });
+      return res.status(200).json({ user });
+    });
   });
 }
 
-function updatePassword(req, res) {
+function changeAccountPassword(req, res) {
   const { oldPassword, newPassword } = req.body;
   User.findById(req.user._id).exec((error, user) => {
     if (error) return res.status(500).json({ error });
