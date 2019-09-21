@@ -57,8 +57,18 @@ async function addElement(req, res) {
 function updateElement(req, res) {
   const { elementId, ...elementData } = req.body;
   if (!elementId) return res.status(400).json({
-    error: `Request must contain elementId field`
+    error: "Request must contain elementId field"
   });
+  if (elementData.name === "") {
+    return res.status(400).json({
+      error: "Request has empty name field"
+    });
+  }
+  if (elementData.description === "") {
+    return res.status(400).json({
+      error: "Request has empty description field"
+    });
+  }
 
   Element.findByIdAndUpdate(
     elementId,

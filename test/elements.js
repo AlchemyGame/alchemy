@@ -96,7 +96,7 @@ describe("Element tests", () => {
         category: category._id.toString()
       });
   });
-  it("Adds new element to account", async () => {
+  it("Add new element to account", async () => {
     const element = await Element.findOne({ name: "Non-Basic Element" }).lean();
     const res = await agent
       .put("/api/account/element/add")
@@ -158,6 +158,32 @@ describe("Element tests", () => {
         name: "Updated element name",
         description: "Updated description"
       });
+  });
+  it("Reject element update (empty name)", async () => {
+    const element = await Element.findOne({ name: "Updated element name" }).lean();
+    const res = await agent
+      .put("/api/element/update")
+      .send({
+        elementId: element,
+        name: ""
+      });
+    res.should.have.status(400);
+    res.body.should
+      .be.an("object")
+      .have.property("error").equal("Request has empty name field");
+  });
+  it("Reject element update (empty description)", async () => {
+    const element = await Element.findOne({ name: "Updated element name" }).lean();
+    const res = await agent
+      .put("/api/element/update")
+      .send({
+        elementId: element,
+        description: ""
+      });
+    res.should.have.status(400);
+    res.body.should
+      .be.an("object")
+      .have.property("error").equal("Request has empty description field");
   });
   it("Delete element", async () => {
     const element = await Element.findOne({ name: "Updated element name" }).lean();
