@@ -20,8 +20,9 @@ const upload = multer();
 
 mongoose.connect(config.mongoUrl, {
   useCreateIndex: true,
+  useFindAndModify: false,
   useNewUrlParser: true,
-  useFindAndModify: false
+  useUnifiedTopology: true
 });
 
 const MongoStore = require("connect-mongo")(session);
