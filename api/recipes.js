@@ -13,40 +13,42 @@ const { Element } = require("../models/element");
 function getRecipes(req, res) {
   const pipeline = [
     { $unwind: "$recipe" },
-    { $lookup: {
-      from: "elements",
-      localField: "recipe",
-      foreignField: "_id",
-      as: "recipe"
-    }},
-    { $lookup: {
-      from: "elements",
-      localField: "result",
-      foreignField: "_id",
-      as: "result"
-    }},
+    {
+      $lookup: {
+        from: "elements",
+        localField: "recipe",
+        foreignField: "_id",
+        as: "recipe"
+      }
+    },
+    {
+      $lookup: {
+        from: "elements",
+        localField: "result",
+        foreignField: "_id",
+        as: "result"
+      }
+    },
     { $unwind: "$result" },
     { $unwind: "$recipe" },
-    { $group: {
-      _id: "$_id",
-      result: { $first: "$result" },
-      recipe: { $push: "$recipe" }
-    }},
-    { $project: {
-      __v: 0,
-      recipe: {
-        category: 0,
-        __v: 0
-      },
-      result: {
-        category: 0,
-        __v: 0
+    {
+      $group: {
+        _id: "$_id",
+        result: { $first: "$result" },
+        recipe: { $push: "$recipe" }
       }
-    }}
+    },
+    {
+      $project: {
+        __v: 0,
+        recipe: { __v: 0 },
+        result: { __v: 0 }
+      }
+    }
   ];
   Recipe.aggregate(pipeline).exec((err, recipes) => {
-    if (err) return res.status(500).json({err});
-    return res.status(200).json({response: recipes});
+    if (err) return res.status(500).json({ err });
+    return res.status(200).json({ response: recipes });
   });
 }
 
@@ -73,7 +75,7 @@ async function addRecipe(req, res) {
       recipe,
       result: resultData._id
     }, (error, existingRecipe) => {
-      if (error) return res.status(500).json({error});
+      if (error) return res.status(500).json({ error });
       if (!existingRecipe) {
         const newRecipe = new Recipe({
           recipe,
