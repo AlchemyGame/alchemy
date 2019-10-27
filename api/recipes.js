@@ -32,6 +32,22 @@ function getRecipes(req, res) {
     { $unwind: "$result" },
     { $unwind: "$recipe" },
     {
+      $lookup: {
+        from: "categories",
+        localField: "result.category",
+        foreignField: "_id",
+        as: "result.category"
+      }
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "recipe.category",
+        foreignField: "_id",
+        as: "recipe.category"
+      }
+    },
+    {
       $group: {
         _id: "$_id",
         result: { $first: "$result" },
@@ -41,8 +57,8 @@ function getRecipes(req, res) {
     {
       $project: {
         __v: 0,
-        recipe: { __v: 0 },
-        result: { __v: 0 }
+        recipe: { __v: 0, category: { __v: 0 } },
+        result: { __v: 0, category: { __v: 0 } }
       }
     }
   ];
