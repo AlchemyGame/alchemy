@@ -132,7 +132,20 @@ describe("Recipe tests", () => {
         res.body.should
           .be.an("object")
           .have.property("response")
+          .be.an("array")
           .lengthOf(1);
+        res.body.response[0].should
+          .be.an("object")
+          .include.all.keys(["result", "recipe"]);
+        res.body.response[0].result.should
+          .be.an("object")
+          .include.all.keys(["_id", "name"]);
+        res.body.response[0].result.category[0].should
+          .be.an("object")
+          .include.all.keys(["_id", "name"]);
+        res.body.response[0].recipe.should
+          .be.an("array")
+          .lengthOf(2);
         done();
       });
   });
