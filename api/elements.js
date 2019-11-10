@@ -11,22 +11,26 @@ const { Recipe } = require("../models/recipe");
 
 function getElements(req, res) {
   const pipeline = [
-    { $lookup: {
+    {
+      $lookup: {
       from: "categories",
-      localField: "category",
-      foreignField: "_id",
-      as: "category"
-    }},
+        localField: "category",
+        foreignField: "_id",
+        as: "category"
+      }
+    },
     { $unwind: "$category" },
-    { $project: {
-      name: 1,
-      description: 1,
-      category: "$category.name"
-    }}
+    {
+      $project: {
+        name: 1,
+        description: 1,
+        category: "$category.name"
+      }
+    }
   ];
   Element.aggregate(pipeline).exec((err, elements) => {
-    if (err) return res.status(500).json({err});
-    return res.status(200).json({response: elements});
+    if (err) return res.status(500).json({ err });
+    return res.status(200).json({ response: elements });
   });
 }
 
@@ -40,7 +44,7 @@ async function addElement(req, res) {
     });
   }
 
-  Element.findOne({name}, (error, element) => {
+  Element.findOne({ name }, (error, element) => {
     if (error) return res.status(500).json({ error });
     if (!element) {
       const newElement = new Element({ name, category, description });
@@ -93,10 +97,12 @@ async function deleteElement(req, res) {
 
   // Check if element is used in any recipes
   const pipeline = [
-    { $project: {
-      _id: 0,
-      __v: 0
-    }},
+    {
+      $project: {
+        _id: 0,
+        __v: 0
+      }
+    },
     { $unwind: "$recipe" }
   ];
 
