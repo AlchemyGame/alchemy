@@ -149,6 +149,22 @@ describe("Recipe tests", () => {
         done();
       });
   });
+  it("Check recipe", async () => {
+    const firstElement = await Element.findOne({ name: "Air" }).lean();
+    const secondElement = await Element.findOne({ name: "Earth" }).lean();
+    const res = await agent
+      .get("/api/recipe/check")
+      .query({ recipe: [firstElement._id.toString(), secondElement._id.toString()] });
+    res.should.have.status(201);
+    res.body.should
+      .be.an("object")
+      .have.property("response")
+      .be.an("object").include.keys(["result", "recipe"]);
+    res.body.response.result.should
+      .be.an("object")
+      .include.keys(["_id", "category"])
+      .have.property("name").that.equals("Fire");
+  });
   it("Update existing recipe", async () => {
     const firstElement = await Element.findOne({ name: "Earth" }).lean();
     const secondElement = await Element.findOne({ name: "Fire" }).lean();
