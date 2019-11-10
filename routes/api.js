@@ -21,6 +21,7 @@ const {
 } = require("../api/stats");
 
 const {
+  getInitialElements,
   getElements,
   addElement,
   updateElement,
@@ -67,7 +68,8 @@ router.put("/account/password/update", isAuthenticated, changeAccountPassword);
 router.get("/account/elements", isAuthenticated, getUserElements);
 router.put("/account/element/add", isAuthenticated, addUserElement);
 
-router.get("/elements", isAuthenticated, getElements);
+router.get("/initialElements", getInitialElements);
+router.get("/elements", isAuthenticated, isAdmin, getElements);
 router.post("/element/add", isAuthenticated, isAdmin, addElement);
 router.put("/element/update", isAuthenticated, isAdmin, updateElement);
 router.delete("/element/delete", isAuthenticated, isAdmin, deleteElement);
