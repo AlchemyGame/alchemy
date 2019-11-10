@@ -1,4 +1,5 @@
 module.exports = {
+  checkRecipe,
   getRecipes,
   addRecipe,
   updateRecipe,
@@ -9,6 +10,42 @@ const mongoose = require("mongoose");
 
 const { Recipe } = require("../models/recipe");
 const { Element } = require("../models/element");
+
+async function checkRecipe(req, res) {
+  const { recipe } = req.query;
+  if (!recipe) return res.status(400).json({
+    error: `Request must contain recipe field`
+  });
+  if (recipe.length < 2) return res.status(400).json({
+    error: `Recipe must contain at least 2 elements`
+  });
+  recipe.sort((a, b) => a < b ? -1 : (a > b) ? 1 : 0);
+
+  const countUnique = arr => new Set(arr).size;
+
+  const recipeElements = await Element.find({ _id: { $in: recipe } }).lean();
+  if (countUnique(recipe) === recipeElements.length) {
+    Recipe.findOne({ recipe }).lean().exec(async (error, existingRecipe) => {
+      if (error) return res.status(500).json({ error });
+      if (existingRecipe) {
+        const resultElement = await Element.findById(existingRecipe.result).lean();
+        existingRecipe.result = resultElement;
+        return res.status(201).json({ response: existingRecipe });
+      } else {
+        return res.status(200).json({
+          response: "Recipe with this elements doesn't exist"
+        });
+      }
+    });
+  } else {
+    const toRemove = recipeElements.map(el => el._id.toString());
+    const notFound = recipe.filter(el => !toRemove.includes(el));
+    return res.status(404).json({
+      error: "Some elements doesn't exist. Impossible to check recipe",
+      notFound
+    });
+  }
+}
 
 function getRecipes(req, res) {
   const pipeline = [
