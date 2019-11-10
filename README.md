@@ -23,3 +23,6 @@ _You can use `yarn` instead of `npm run`_
 * `npm run dump`: export Alchemy collections
 * `npm run drop`: clear Alchemy database
 * `npm run restore`: import Alchemy collections
+
+## Development
+Please make sure to follow our [Commit Message Format specification](https://github.com/AlchemyGame/alchemy/wiki/Commit-Message-Format)
