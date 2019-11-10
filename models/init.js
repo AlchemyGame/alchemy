@@ -8,7 +8,7 @@ async function initCollections() {
   async function createCategory() {
     const category = await Category.findOne({}).lean();
     if (category) return category;
-    const newCategory = new Category({ name: "Elements" });
+    const newCategory = new Category({ name: "Initial Elements" });
     return await newCategory.save();
   }
 

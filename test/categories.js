@@ -24,7 +24,7 @@ describe("Category tests", () => {
       });
   });
 
-  it("Check basic category", done => {
+  it("Check initial category", done => {
     agent
       .get("/api/categories")
       .end((err, res) => {
@@ -36,7 +36,7 @@ describe("Category tests", () => {
           .lengthOf(1);
         res.body.response[0].should
           .be.an("object")
-          .have.property("name").equal("Elements");
+          .have.property("name").equal("Initial Elements");
         done();
       });
   });

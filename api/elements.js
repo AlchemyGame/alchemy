@@ -87,12 +87,12 @@ function updateElement(req, res) {
 
 async function deleteElement(req, res) {
   const { elementId } = req.body;
-  // Check if element is one of the basic elements
-  const basicCategory = await Category.findOne({ name: "Elements" }).lean();
+  // Check if element is one of the initial elements
+  const initialCategory = await Category.findOne({ name: "Initial Elements" }).lean();
   const element = await Element.findById(elementId).lean();
   if (!element) return res.status(404).json({ error: "Element doesn't exist" });
-  if (element.category.toString() === basicCategory._id.toString()) {
-    return res.status(400).json({ error: "This element is one of four basic elements" });
+  if (element.category.toString() === initialCategory._id.toString()) {
+    return res.status(400).json({ error: "This element is one of four initial elements" });
   }
 
   // Check if element is used in any recipes

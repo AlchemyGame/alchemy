@@ -99,9 +99,9 @@ schema.statics.createNew = function(obj, done) {
     if (user) return done("Email already exists");
 
     user = new User(obj);
-    const basicCategory = await Category.findOne({ name: "Elements" }).lean();
-    const basicElements = await Element.find({ category: basicCategory }).lean();
-    user.elements = basicElements.map(element => element._id);
+    const initialCategory = await Category.findOne({ name: "Initial Elements" }).lean();
+    const initialElements = await Element.find({ category: initialCategory }).lean();
+    user.elements = initialElements.map(element => element._id);
 
     user.save(err => {
       if (err) return done(err);

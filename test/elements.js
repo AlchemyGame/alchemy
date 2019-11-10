@@ -26,7 +26,7 @@ describe("Element tests", () => {
       });
   });
 
-  it("Count basic elements", done => {
+  it("Count initial elements", done => {
     agent
       .get("/api/elements")
       .end((err, res) => {
@@ -196,7 +196,7 @@ describe("Element tests", () => {
       .have.property("response")
       .have.property("name").equal("Updated element name");
   });
-  it("Reject to delete basic element", async () => {
+  it("Reject to delete initial element", async () => {
     const element = await Element.findOne({ name: "Water" }).lean();
     const res = await agent
       .delete("/api/element/delete")
@@ -204,6 +204,6 @@ describe("Element tests", () => {
     res.should.have.status(400);
     res.body.should
       .be.an("object")
-      .have.property("error").equal("This element is one of four basic elements");
+      .have.property("error").equal("This element is one of four initial elements");
   });
 });

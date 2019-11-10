@@ -16,11 +16,11 @@ describe("Account tests", () => {
   before(done => {
     Category.deleteMany({}, error => {
       if (error) done(error);
-      const newCategory = new Category({ name: "Elements" });
+      const newCategory = new Category({ name: "Initial Elements" });
       newCategory.save(error => {
         if (error) done(error);
         Element.deleteMany({}, err => err && console.error(err));
-        Category.findOne({ name: "Elements" }).lean().exec((error, category) => {
+        Category.findOne({ name: "Initial Elements" }).lean().exec((error, category) => {
           if (error) return done(error);
 
           const elements = [
