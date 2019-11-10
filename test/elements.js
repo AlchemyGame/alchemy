@@ -1,5 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
+const chaiLike = require("chai-like");
+const chaiThings = require("chai-things");
 const supertest = require("supertest");
 
 const { Category } = require("../models/category");
@@ -11,6 +13,8 @@ const { generateId } = require("./helpers");
 
 chai.should();
 chai.use(chaiHttp);
+chai.use(chaiLike);
+chai.use(chaiThings);
 
 describe("Element tests", () => {
   before(done => {
