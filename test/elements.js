@@ -30,16 +30,33 @@ describe("Element tests", () => {
       });
   });
 
-  it("Count initial elements", done => {
+  it("Get initial elements", done => {
     agent
-      .get("/api/elements")
+      .get("/api/initialElements")
       .end((err, res) => {
         if (err) return done(err);
         res.should.have.status(200);
         res.body.should
           .be.an("object")
           .have.property("response")
-          .lengthOf(4);
+          .contain.something.like(
+            {
+              "name": "Air",
+              "category": "Initial Elements"
+            },
+            {
+              "name": "Earth",
+              "category": "Initial Elements"
+            },
+            {
+              "name": "Fire",
+              "category": "Initial Elements"
+            },
+            {
+              "name": "Water",
+              "category": "Initial Elements"
+            }
+          );
         done();
       });
   });
@@ -98,6 +115,19 @@ describe("Element tests", () => {
         name: "Undiscovered Element",
         description: "Test",
         category: category._id.toString()
+      });
+  });
+  it("Count elements", done => {
+    agent
+      .get("/api/elements")
+      .end((err, res) => {
+        if (err) return done(err);
+        res.should.have.status(200);
+        res.body.should
+          .be.an("object")
+          .have.property("response")
+          .lengthOf(7);
+        done();
       });
   });
   it("Add new element to account", async () => {
