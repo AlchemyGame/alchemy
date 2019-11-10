@@ -1,20 +1,10 @@
-const chai = require("chai");
-const chaiHttp = require("chai-http");
-const chaiLike = require("chai-like");
-const chaiThings = require("chai-things");
-const supertest = require("supertest");
-
 const { Category } = require("../models/category");
 const { Element } = require("../models/element");
-
-const server = require("../server");
-const agent = supertest.agent(server);
 const { generateId } = require("./helpers");
 
-chai.should();
-chai.use(chaiHttp);
-chai.use(chaiLike);
-chai.use(chaiThings);
+const supertest = require("supertest");
+const server = require("../server");
+const agent = supertest.agent(server);
 
 describe("Element tests", () => {
   before(done => {

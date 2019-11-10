@@ -1,16 +1,10 @@
-const chai = require("chai");
-const chaiHttp = require("chai-http");
-const supertest = require("supertest");
-
 const { User } = require("../models/user");
 const { Category } = require("../models/category");
 const { Element } = require("../models/element");
 
+const supertest = require("supertest");
 const server = require("../server");
 const agent = supertest.agent(server);
-
-chai.should();
-chai.use(chaiHttp);
 
 describe("Account tests", () => {
   before(done => {
