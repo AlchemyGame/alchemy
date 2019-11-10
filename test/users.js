@@ -206,7 +206,7 @@ describe("Account tests", () => {
   it("Return admin accounts", done => {
     agent
       .get("/api/users")
-      .query({ role: "admin"})
+      .query({ role: "admin" })
       .end((err, res) => {
         if (err) return done(err);
         res.should.have.status(200);
@@ -221,7 +221,7 @@ describe("Account tests", () => {
   it("Return user accounts", done => {
     agent
       .get("/api/users")
-      .query({ role: "user"})
+      .query({ role: "user" })
       .end((err, res) => {
         if (err) return done(err);
         res.should.have.status(200);
@@ -307,7 +307,7 @@ describe("Account tests", () => {
   it("Return 0 users", done => {
     agent
       .get("/api/users")
-      .query({ role: "user"})
+      .query({ role: "user" })
       .end((err, res) => {
         if (err) return done(err);
         res.should.have.status(200);
