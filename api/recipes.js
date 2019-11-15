@@ -16,7 +16,7 @@ async function checkRecipe(req, res) {
   if (!recipe) return res.status(400).json({
     error: `Request must contain recipe field`
   });
-  if (recipe.length < 2) return res.status(400).json({
+  if (!Array.isArray(recipe) || recipe.length < 2) return res.status(400).json({
     error: `Recipe must contain at least 2 elements`
   });
   recipe.sort((a, b) => a < b ? -1 : (a > b) ? 1 : 0);
@@ -110,7 +110,7 @@ async function addRecipe(req, res) {
   if (!recipe || !result) return res.status(400).json({
     error: `Request must contain recipe and result fields`
   });
-  if (recipe.length < 2) return res.status(400).json({
+  if (!Array.isArray(recipe) || recipe.length < 2) return res.status(400).json({
     error: `Recipe must contain at least 2 elements`
   });
   recipe.sort((a, b) => a < b ? -1 : (a > b) ? 1 : 0);
