@@ -153,11 +153,48 @@ describe("Recipe tests", () => {
     res.body.should
       .be.an("object")
       .have.property("response")
-      .be.an("object").include.keys(["result", "recipe"]);
+      .be.an("object")
+      .include.keys(["result", "recipe"]);
     res.body.response.result.should
       .be.an("object")
       .include.keys(["_id", "category"])
-      .have.property("name").that.equals("Fire");
+      .have.property("name").equal("Fire");
+  });
+  it("Reject recipe check (recipe has only one element)", async () => {
+    const firstElement = await Element.findOne({ name: "Air" }).lean();
+    const res = await agent
+      .get("/api/recipe/check")
+      .query({ recipe: [firstElement._id.toString()] });
+    res.should.have.status(400);
+    res.body.should
+      .be.an("object")
+      .have.property("error").equal("Recipe must contain at least 2 elements");
+  });
+  it("Reject recipe check (recipe with this elements doesn't exists)", async () => {
+    const firstElement = await Element.findOne({ name: "Air" }).lean();
+    const secondElement = await Element.findOne({ name: "Fire" }).lean();
+    const res = await agent
+      .get("/api/recipe/check")
+      .query({ recipe: [firstElement._id.toString(), secondElement._id.toString()] });
+    res.should.have.status(200);
+    res.body.should
+      .be.an("object")
+      .have.property("response").equal("Recipe with this elements doesn't exist");
+  });
+  it("Reject recipe check (one of the elements doesn't exist)", async () => {
+    const firstElement = await Element.findOne({ name: "Air" }).lean();
+    const secondElement = generateId();
+    const res = await agent
+      .get("/api/recipe/check")
+      .query({ recipe: [firstElement._id.toString(), secondElement] });
+    console.log(res.body)
+    res.should.have.status(404);
+    res.body.should
+      .be.an("object")
+      .have.property("error").equal("Some elements doesn't exist. Impossible to check recipe");
+    res.body.should
+      .be.an("object")
+      .have.property("notFound").include(secondElement);
   });
   it("Update existing recipe", async () => {
     const firstElement = await Element.findOne({ name: "Earth" }).lean();
