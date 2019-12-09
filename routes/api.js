@@ -37,8 +37,9 @@ const {
 } = require("../api/categories");
 
 const {
-  checkRecipe,
   getRecipes,
+  getInitialRecipes,
+  checkRecipe,
   addRecipe,
   updateRecipe,
   deleteRecipe
@@ -82,8 +83,9 @@ router.post("/category/add", isAuthenticated, isAdmin, addCategory);
 router.put("/category/update", isAuthenticated, isAdmin, updateCategory);
 router.delete("/category/delete", isAuthenticated, isAdmin, deleteCategory);
 
-router.get("/recipe/check", isAuthenticated, checkRecipe);
 router.get("/recipes", isAuthenticated, isAdmin, getRecipes);
+router.get("/recipes/initial", getInitialRecipes);
+router.get("/recipe/check", isAuthenticated, checkRecipe);
 router.post("/recipe/add", isAuthenticated, isAdmin, addRecipe);
 router.put("/recipe/update", isAuthenticated, isAdmin, updateRecipe);
 router.delete("/recipe/delete", isAuthenticated, isAdmin, deleteRecipe);
