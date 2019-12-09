@@ -13,6 +13,7 @@ const {
   changeAccountRole,
   changeAccountPassword,
   getUserElements,
+  getUserRecipes,
   addUserElement
 } = require("../api/users");
 
@@ -67,6 +68,7 @@ router.put("/account/disable", isAuthenticated, isAdmin, changeAccountStatus);
 router.put("/account/role/update", isAuthenticated, isAdmin, changeAccountRole);
 router.put("/account/password/update", isAuthenticated, changeAccountPassword);
 router.get("/account/elements", isAuthenticated, getUserElements);
+router.get("/account/recipes", isAuthenticated, getUserRecipes);
 router.put("/account/element/add", isAuthenticated, addUserElement);
 
 router.get("/elements", isAuthenticated, isAdmin, getElements);

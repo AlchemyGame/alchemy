@@ -10,6 +10,7 @@ module.exports = {
   changeAccountRole,
   changeAccountPassword,
   getUserElements,
+  getUserRecipes,
   addUserElement
 };
 
@@ -17,6 +18,7 @@ const passport = require("passport");
 
 const { User } = require("../models/user");
 const { Element } = require("../models/element");
+const { Recipe } = require("../models/recipe");
 const { sendEmail } = require("./mail");
 
 function updateActivity(user, next) {
@@ -207,9 +209,72 @@ function getUserElements(req, res) {
   // Using current user _id
   User.findById(req.user._id).lean().exec((error, user) => {
     if (error) return res.status(500).json({ error });
-    Element.find({ _id: { $in: user.elements }}, "-__v").lean().exec((error, elements) => {
+    Element.find({ _id: { $in: user.elements } }, "-__v").lean().exec((error, elements) => {
       if (error) return res.status(500).json({ error });
       res.status(200).json({ elements });
+    });
+  });
+}
+
+function getUserRecipes(req, res) {
+  User.findById(req.user._id, "elements").lean().exec((error, user) => {
+    if (error) return res.status(500).json({ error });
+
+    const pipeline = [
+      { $match: { result: { $in: user.elements } } },
+      { $unwind: "$recipe" },
+      {
+        $lookup: {
+          from: "elements",
+          localField: "recipe",
+          foreignField: "_id",
+          as: "recipe"
+        }
+      },
+      {
+        $lookup: {
+          from: "elements",
+          localField: "result",
+          foreignField: "_id",
+          as: "result"
+        }
+      },
+      { $unwind: "$result" },
+      { $unwind: "$recipe" },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "result.category",
+          foreignField: "_id",
+          as: "result.category"
+        }
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "recipe.category",
+          foreignField: "_id",
+          as: "recipe.category"
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          result: { $first: "$result" },
+          recipe: { $push: "$recipe" }
+        }
+      },
+      {
+        $project: {
+          __v: 0,
+          recipe: { __v: 0, category: { __v: 0 } },
+          result: { __v: 0, category: { __v: 0 } }
+        }
+      }
+    ];
+    Recipe.aggregate(pipeline).exec((error, recipes) => {
+      if (error) return res.status(500).json({ error });
+      return res.status(200).json({ response: recipes });
     });
   });
 }
