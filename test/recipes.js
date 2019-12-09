@@ -187,7 +187,6 @@ describe("Recipe tests", () => {
     const res = await agent
       .get("/api/recipe/check")
       .query({ recipe: [firstElement._id.toString(), secondElement] });
-    console.log(res.body)
     res.should.have.status(404);
     res.body.should
       .be.an("object")
