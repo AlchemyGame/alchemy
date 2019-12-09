@@ -22,7 +22,7 @@ describe("Element tests", () => {
 
   it("Get initial elements", done => {
     agent
-      .get("/api/initialElements")
+      .get("/api/elements/initial")
       .end((err, res) => {
         if (err) return done(err);
         res.should.have.status(200);
