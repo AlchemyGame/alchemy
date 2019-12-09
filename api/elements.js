@@ -1,6 +1,6 @@
 module.exports = {
-  getInitialElements,
   getElements,
+  getInitialElements,
   addElement,
   updateElement,
   deleteElement
@@ -9,6 +9,31 @@ module.exports = {
 const { Element } = require("../models/element");
 const { Category } = require("../models/category");
 const { Recipe } = require("../models/recipe");
+
+function getElements(req, res) {
+  const pipeline = [
+    {
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "category"
+      }
+    },
+    { $unwind: "$category" },
+    {
+      $project: {
+        name: 1,
+        description: 1,
+        category: "$category.name"
+      }
+    }
+  ];
+  Element.aggregate(pipeline).exec((err, elements) => {
+    if (err) return res.status(500).json({ err });
+    return res.status(200).json({ response: elements });
+  });
+}
 
 function getInitialElements(req, res) {
   const pipeline = [
@@ -29,31 +54,6 @@ function getInitialElements(req, res) {
       }
     },
     { $match: { category: "Initial Elements" } }
-  ];
-  Element.aggregate(pipeline).exec((err, elements) => {
-    if (err) return res.status(500).json({ err });
-    return res.status(200).json({ response: elements });
-  });
-}
-
-function getElements(req, res) {
-  const pipeline = [
-    {
-      $lookup: {
-        from: "categories",
-        localField: "category",
-        foreignField: "_id",
-        as: "category"
-      }
-    },
-    { $unwind: "$category" },
-    {
-      $project: {
-        name: 1,
-        description: 1,
-        category: "$category.name"
-      }
-    }
   ];
   Element.aggregate(pipeline).exec((err, elements) => {
     if (err) return res.status(500).json({ err });
