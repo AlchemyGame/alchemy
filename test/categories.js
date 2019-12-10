@@ -37,32 +37,32 @@ describe("Category tests", () => {
   it("Add new category", done => {
     agent
       .post("/api/category/add")
-      .send({ name: "Test Category" })
+      .send({ name: "Environment" })
       .end((err, res) => {
         if (err) return done(err);
         res.should.have.status(201);
         res.body.should
           .be.an("object")
           .have.property("response")
-          .have.property("name").equal("Test Category");
+          .have.property("name").equal("Environment");
         done();
       });
   });
   it("Reject category creation (already exists)", done => {
     agent
       .post("/api/category/add")
-      .send({ name: "Test Category" })
+      .send({ name: "Environment" })
       .end((err, res) => {
         if (err) return done(err);
         res.should.have.status(409);
         res.body.should
           .be.an("object")
-          .have.property("error").equal("Category with name 'Test Category' is already exists");
+          .have.property("error").equal("Category with name 'Environment' is already exists");
         done();
       });
   });
   it("Update existing category", async () => {
-    const category = await Category.findOne({ name: "Test Category" }).lean();
+    const category = await Category.findOne({ name: "Environment" }).lean();
     const res = await agent
       .put("/api/category/update")
       .send({
@@ -100,14 +100,14 @@ describe("Category tests", () => {
   it("Add new category", done => {
     agent
       .post("/api/category/add")
-      .send({ name: "Test Category" })
+      .send({ name: "Environment" })
       .end((err, res) => {
         if (err) return done(err);
         res.should.have.status(201);
         res.body.should
           .be.an("object")
           .have.property("response")
-          .have.property("name").equal("Test Category");
+          .have.property("name").equal("Environment");
         done();
       });
   });

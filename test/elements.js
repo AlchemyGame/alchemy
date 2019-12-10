@@ -51,7 +51,7 @@ describe("Element tests", () => {
       });
   });
   it("Add new element (for update and delete)", async () => {
-    const category = await Category.findOne({ name: "Test Category" }).lean();
+    const category = await Category.findOne({ name: "Environment" }).lean();
     const res = await agent
       .post("/api/element/add")
       .send({
@@ -70,11 +70,11 @@ describe("Element tests", () => {
       });
   });
   it("Add new element (to be opened by user)", async () => {
-    const category = await Category.findOne({ name: "Test Category" }).lean();
+    const category = await Category.findOne({ name: "Environment" }).lean();
     const res = await agent
       .post("/api/element/add")
       .send({
-        name: "Non-Basic Element",
+        name: "Steam",
         description: "Test",
         category
       });
@@ -83,13 +83,13 @@ describe("Element tests", () => {
       .be.an("object")
       .have.property("response")
       .contain({
-        name: "Non-Basic Element",
+        name: "Steam",
         description: "Test",
         category: category._id.toString()
       });
   });
   it("Add new element (undiscovered)", async () => {
-    const category = await Category.findOne({ name: "Test Category" }).lean();
+    const category = await Category.findOne({ name: "Environment" }).lean();
     const res = await agent
       .post("/api/element/add")
       .send({
@@ -121,7 +121,7 @@ describe("Element tests", () => {
       });
   });
   it("Add new element to account", async () => {
-    const element = await Element.findOne({ name: "Non-Basic Element" }).lean();
+    const element = await Element.findOne({ name: "Steam" }).lean();
     const res = await agent
       .put("/api/account/element/add")
       .type("form")
@@ -131,12 +131,12 @@ describe("Element tests", () => {
       .be.an("object")
       .have.property("element")
       .contain({
-        name: "Non-Basic Element",
+        name: "Steam",
         description: "Test"
       });
   });
   it("Reject element creation (already exists)", async () => {
-    const category = await Category.findOne({ name: "Test Category" }).lean();
+    const category = await Category.findOne({ name: "Environment" }).lean();
     const res = await agent
       .post("/api/element/add")
       .send({
@@ -165,7 +165,7 @@ describe("Element tests", () => {
   });
   it("Update existing element", async () => {
     const element = await Element.findOne({ name: "Test Element" }).lean();
-    const category = await Category.findOne({ name: "Test Category" }).lean();
+    const category = await Category.findOne({ name: "Environment" }).lean();
     const res = await agent
       .put("/api/element/update")
       .send({

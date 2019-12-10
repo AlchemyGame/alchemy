@@ -22,10 +22,10 @@ describe("Recipe tests", () => {
   });
 
   it("Add new recipe", async () => {
-    const firstElement = await Element.findOne({ name: "Air" }).lean();
-    const secondElement = await Element.findOne({ name: "Earth" }).lean();
+    const firstElement = await Element.findOne({ name: "Water" }).lean();
+    const secondElement = await Element.findOne({ name: "Fire" }).lean();
     const recipe = [firstElement._id.toString(), secondElement._id.toString()];
-    const result = await Element.findOne({ name: "Fire" }).lean();
+    const result = await Element.findOne({ name: "Air" }).lean();
     const res = await agent
       .post("/api/recipe/add")
       .send({
@@ -40,13 +40,13 @@ describe("Recipe tests", () => {
 
     res.body.response.recipe.should
       .be.an("array")
-      .deep.equal([firstElement._id.toString(), secondElement._id.toString()]);
+      .deep.equal([firstElement._id.toString(), secondElement._id.toString()].sort());
   });
   it("Reject recipe creation (already exists)", async () => {
-    const firstElement = await Element.findOne({ name: "Air" }).lean();
-    const secondElement = await Element.findOne({ name: "Earth" }).lean();
+    const firstElement = await Element.findOne({ name: "Water" }).lean();
+    const secondElement = await Element.findOne({ name: "Fire" }).lean();
     const recipe = [firstElement._id.toString(), secondElement._id.toString()];
-    const result = await Element.findOne({ name: "Fire" }).lean();
+    const result = await Element.findOne({ name: "Air" }).lean();
     const res = await agent
       .post("/api/recipe/add")
       .send({
@@ -59,7 +59,7 @@ describe("Recipe tests", () => {
       .have.property("error").equal("This recipe is already exists");
   });
   it("Reject recipe creation (missing recipe field)", async () => {
-    const result = await Element.findOne({ name: "Fire" }).lean();
+    const result = await Element.findOne({ name: "Water" }).lean();
     const res = await agent
       .post("/api/recipe/add")
       .send({
@@ -71,9 +71,9 @@ describe("Recipe tests", () => {
       .have.property("error").equal("Request must contain recipe and result fields");
   });
   it("Reject recipe creation (one element recipe)", async () => {
-    const firstElement = await Element.findOne({ name: "Air" }).lean();
+    const firstElement = await Element.findOne({ name: "Water" }).lean();
     const recipe = [firstElement._id.toString()];
-    const result = await Element.findOne({ name: "Fire" }).lean();
+    const result = await Element.findOne({ name: "Air" }).lean();
     const res = await agent
       .post("/api/recipe/add")
       .send({
@@ -86,8 +86,8 @@ describe("Recipe tests", () => {
       .have.property("error").equal("Recipe must contain at least 2 elements");
   });
   it("Reject recipe creation (result not exists)", async () => {
-    const firstElement = await Element.findOne({ name: "Air" }).lean();
-    const secondElement = await Element.findOne({ name: "Earth" }).lean();
+    const firstElement = await Element.findOne({ name: "Water" }).lean();
+    const secondElement = await Element.findOne({ name: "Air" }).lean();
     const recipe = [firstElement._id.toString(), secondElement._id.toString()];
     const result = generateId();
     const res = await agent
@@ -103,9 +103,9 @@ describe("Recipe tests", () => {
   });
   it("Reject recipe creation (recipe element not exists)", async () => {
     const firstElement = generateId();
-    const secondElement = await Element.findOne({ name: "Earth" }).lean();
+    const secondElement = await Element.findOne({ name: "Water" }).lean();
     const recipe = [firstElement, secondElement._id.toString()];
-    const result = await Element.findOne({ name: "Fire" }).lean();
+    const result = await Element.findOne({ name: "Air" }).lean();
     const res = await agent
       .post("/api/recipe/add")
       .send({
@@ -144,8 +144,8 @@ describe("Recipe tests", () => {
       });
   });
   it("Check recipe", async () => {
-    const firstElement = await Element.findOne({ name: "Air" }).lean();
-    const secondElement = await Element.findOne({ name: "Earth" }).lean();
+    const firstElement = await Element.findOne({ name: "Water" }).lean();
+    const secondElement = await Element.findOne({ name: "Fire" }).lean();
     const res = await agent
       .get("/api/recipe/check")
       .query({ recipe: [firstElement._id.toString(), secondElement._id.toString()] });
@@ -158,10 +158,10 @@ describe("Recipe tests", () => {
     res.body.response.result.should
       .be.an("object")
       .include.keys(["_id", "category"])
-      .have.property("name").equal("Fire");
+      .have.property("name").equal("Air");
   });
   it("Reject recipe check (recipe has only one element)", async () => {
-    const firstElement = await Element.findOne({ name: "Air" }).lean();
+    const firstElement = await Element.findOne({ name: "Water" }).lean();
     const res = await agent
       .get("/api/recipe/check")
       .query({ recipe: [firstElement._id.toString()] });
@@ -182,7 +182,7 @@ describe("Recipe tests", () => {
       .have.property("response").equal("Recipe with this elements doesn't exist");
   });
   it("Reject recipe check (one of the elements doesn't exist)", async () => {
-    const firstElement = await Element.findOne({ name: "Air" }).lean();
+    const firstElement = await Element.findOne({ name: "Water" }).lean();
     const secondElement = generateId();
     const res = await agent
       .get("/api/recipe/check")
@@ -194,29 +194,6 @@ describe("Recipe tests", () => {
     res.body.should
       .be.an("object")
       .have.property("notFound").include(secondElement);
-  });
-  it("Update existing recipe", async () => {
-    const firstElement = await Element.findOne({ name: "Earth" }).lean();
-    const secondElement = await Element.findOne({ name: "Fire" }).lean();
-    const newRecipe = [firstElement._id.toString(), secondElement._id.toString()];
-    const newResult = await Element.findOne({ name: "Air" }).lean();
-    const recipeId = await Recipe.findOne({ result: secondElement }).lean();
-    const res = await agent
-      .put("/api/recipe/update")
-      .send({
-        newRecipe,
-        newResult: newResult._id.toString(),
-        recipeId
-      });
-    res.should.have.status(200);
-    res.body.should
-      .be.an("object")
-      .have.property("response")
-      .have.property("result").equal(newResult._id.toString());
-
-    res.body.response.recipe.should
-      .be.an("array")
-      .deep.equal([firstElement._id.toString(), secondElement._id.toString()]);
   });
   it("Reject recipe update (missing parameters)", async () => {
     const result = await Element.findOne({ name: "Air" }).lean();
@@ -231,10 +208,10 @@ describe("Recipe tests", () => {
       .have.property("error").equal("Request must contain recipe and result fields");
   });
   it("Reject recipe update (one element recipe)", async () => {
-    const firstElement = await Element.findOne({ name: "Fire" }).lean();
+    const firstElement = await Element.findOne({ name: "Water" }).lean();
     const newRecipe = [firstElement._id.toString()];
     const oldResult = await Element.findOne({ name: "Air" }).lean();
-    const newResult = await Element.findOne({ name: "Water" }).lean();
+    const newResult = await Element.findOne({ name: "Steam" }).lean();
     const recipeId = await Recipe.findOne({ result: oldResult }).lean();
     const res = await agent
       .put("/api/recipe/update")
@@ -249,8 +226,8 @@ describe("Recipe tests", () => {
       .have.property("error").equal("Recipe must contain at least 2 elements");
   });
   it("Reject recipe update (result not exists)", async () => {
-    const firstElement = await Element.findOne({ name: "Fire" }).lean();
-    const secondElement = await Element.findOne({ name: "Earth" }).lean();
+    const firstElement = await Element.findOne({ name: "Water" }).lean();
+    const secondElement = await Element.findOne({ name: "Fire" }).lean();
     const newRecipe = [firstElement._id.toString(), secondElement._id.toString()];
     const oldResult = await Element.findOne({ name: "Air" }).lean();
     const newResult = generateId();
@@ -269,10 +246,10 @@ describe("Recipe tests", () => {
   });
   it("Reject recipe update (recipe element not exists)", async () => {
     const firstElement = generateId();
-    const secondElement = await Element.findOne({ name: "Earth" }).lean();
+    const secondElement = await Element.findOne({ name: "Fire" }).lean();
     const newRecipe = [firstElement, secondElement._id.toString()];
     const oldResult = await Element.findOne({ name: "Air" }).lean();
-    const newResult = await Element.findOne({ name: "Water" }).lean();
+    const newResult = await Element.findOne({ name: "Steam" }).lean();
     const recipeId = await Recipe.findOne({ result: oldResult }).lean();
     const res = await agent
       .put("/api/recipe/update")
@@ -286,8 +263,32 @@ describe("Recipe tests", () => {
       .be.an("object")
       .have.property("error").equal("Some elements doesn't exist. Recipe can not be updated");
   });
+  it("Update existing recipe", async () => {
+    const firstElement = await Element.findOne({ name: "Water" }).lean();
+    const secondElement = await Element.findOne({ name: "Fire" }).lean();
+    const newRecipe = [firstElement._id.toString(), secondElement._id.toString()];
+    const oldResult = await Element.findOne({ name: "Air" }).lean();
+    const newResult = await Element.findOne({ name: "Steam" }).lean();
+    const recipeId = await Recipe.findOne({ result: oldResult }).lean();
+    const res = await agent
+      .put("/api/recipe/update")
+      .send({
+        newRecipe,
+        newResult: newResult._id.toString(),
+        recipeId
+      });
+    res.should.have.status(200);
+    res.body.should
+      .be.an("object")
+      .have.property("response")
+      .have.property("result").equal(newResult._id.toString());
+
+    res.body.response.recipe.should
+      .be.an("array")
+      .deep.equal([firstElement._id.toString(), secondElement._id.toString()].sort());
+  });
   it("Delete recipe", async () => {
-    const resultElement = await Element.findOne({ name: "Air" }).lean();
+    const resultElement = await Element.findOne({ name: "Steam" }).lean();
     const recipe = await Recipe.findOne({ result: resultElement }).lean();
     const res = await agent
       .delete("/api/recipe/delete")
