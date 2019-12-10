@@ -13,3 +13,4 @@ require("./test/categories");
 require("./test/elements");
 require("./test/stats");
 require("./test/recipes");
+require("./test/anonymousUser");
