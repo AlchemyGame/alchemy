@@ -339,4 +339,25 @@ describe("Recipe tests", () => {
       .have.property("response")
       .have.property("result").equal(resultElement._id.toString());
   });
+  it("Add recipe after deletion", async () => {
+    const firstElement = await Element.findOne({ name: "Water" }).lean();
+    const secondElement = await Element.findOne({ name: "Fire" }).lean();
+    const recipe = [firstElement._id.toString(), secondElement._id.toString()];
+    const result = await Element.findOne({ name: "Steam" }).lean();
+    const res = await agent
+      .post("/api/recipe/add")
+      .send({
+        recipe,
+        result: result._id.toString()
+      });
+    res.should.have.status(201);
+    res.body.should
+      .be.an("object")
+      .have.property("response")
+      .have.property("result").equal(result._id.toString());
+
+    res.body.response.recipe.should
+      .be.an("array")
+      .deep.equal([firstElement._id.toString(), secondElement._id.toString()].sort());
+  });
 });
