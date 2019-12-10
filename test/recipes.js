@@ -160,6 +160,23 @@ describe("Recipe tests", () => {
       .include.keys(["_id", "category"])
       .have.property("name").equal("Air");
   });
+  it("Check recipe (reversed order)", async () => {
+    const firstElement = await Element.findOne({ name: "Water" }).lean();
+    const secondElement = await Element.findOne({ name: "Fire" }).lean();
+    const res = await agent
+      .get("/api/recipe/check")
+      .query({ recipe: [secondElement._id.toString(), firstElement._id.toString()] });
+    res.should.have.status(201);
+    res.body.should
+      .be.an("object")
+      .have.property("response")
+      .be.an("object")
+      .include.keys(["result", "recipe"]);
+    res.body.response.result.should
+      .be.an("object")
+      .include.keys(["_id", "category"])
+      .have.property("name").equal("Air");
+  });
   it("Reject recipe check (recipe has only one element)", async () => {
     const firstElement = await Element.findOne({ name: "Water" }).lean();
     const res = await agent
