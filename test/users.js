@@ -132,7 +132,7 @@ describe("Account tests", () => {
         done();
       });
   });
-  it("Return current account opened elements", done => {
+  it("Return current account initial elements", done => {
     agent
       .get("/api/account/elements")
       .end((err, res) => {
@@ -142,6 +142,20 @@ describe("Account tests", () => {
           .be.an("object")
           .have.property("elements")
           .lengthOf(4);
+        done();
+      });
+  });
+  it("Return current account recipes", done => {
+    agent
+      .get("/api/account/recipes")
+      .end((err, res) => {
+        if (err) return done(err);
+        res.should.have.status(200);
+        res.body.should
+          .be.an("object")
+          .have.property("response")
+          .be.an("array")
+          .lengthOf(0);
         done();
       });
   });

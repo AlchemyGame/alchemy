@@ -304,6 +304,29 @@ describe("Recipe tests", () => {
       .be.an("array")
       .deep.equal([firstElement._id.toString(), secondElement._id.toString()].sort());
   });
+  it("Return current account discovered recipes", done => {
+    agent
+      .get("/api/account/recipes")
+      .end((err, res) => {
+        if (err) return done(err);
+        res.should.have.status(200);
+        res.body.should
+          .be.an("object")
+          .have.property("response")
+          .be.an("array")
+          .lengthOf(1);
+        done();
+      });
+  });
+  it("Reject recipe deletion (missing recipeId field)", async () => {
+    const res = await agent
+      .delete("/api/recipe/delete")
+      .send({});
+    res.should.have.status(400);
+    res.body.should
+      .be.an("object")
+      .have.property("error").equal("Request must contain recipeId field");
+  });
   it("Delete recipe", async () => {
     const resultElement = await Element.findOne({ name: "Steam" }).lean();
     const recipe = await Recipe.findOne({ result: resultElement }).lean();
@@ -315,14 +338,5 @@ describe("Recipe tests", () => {
       .be.an("object")
       .have.property("response")
       .have.property("result").equal(resultElement._id.toString());
-  });
-  it("Reject recipe deletion (missing recipeId field)", async () => {
-    const res = await agent
-      .delete("/api/recipe/delete")
-      .send({});
-    res.should.have.status(400);
-    res.body.should
-      .be.an("object")
-      .have.property("error").equal("Request must contain recipeId field");
   });
 });
