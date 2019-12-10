@@ -167,7 +167,7 @@ async function updateRecipe(req, res) {
   if (!recipeId || !newRecipe || !newResult) return res.status(400).json({
     error: `Request must contain recipeId, newRecipe and newResult fields`
   });
-  if (newRecipe.length < 2) return res.status(400).json({
+  if (!Array.isArray(newRecipe) || newRecipe.length < 2) return res.status(400).json({
     error: `Recipe must contain at least 2 elements`
   });
   newRecipe.sort((a, b) => a < b ? -1 : (a > b) ? 1 : 0);
